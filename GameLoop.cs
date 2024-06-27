@@ -3,9 +3,13 @@
     internal class GameLoop : IGameLoop
     {
         private INavigation _navigation;
-        public GameLoop(INavigation navigation)
+        private ILogger _logger;
+        private State _currentState;
+
+        public GameLoop(INavigation navigation, ILogger logger)
         {
             _navigation = navigation;
+            _logger = logger;   
         }
 
         public void Run()
@@ -23,19 +27,23 @@
                         break;
 
                     case ConsoleKey.UpArrow:
-                        _navigation.MoveUp();
+                        _currentState = _navigation.MoveUp();
+                        _logger.DebugPrintLine($"Current State: {_currentState}");
                         break;
 
                     case ConsoleKey.DownArrow:
-                        _navigation.MoveDown();
+                        _currentState = _navigation.MoveDown();
+                        _logger.DebugPrintLine($"Current State: {_currentState}");
                         break;
 
                     case ConsoleKey.LeftArrow:
-                        _navigation.MoveLeft();
+                        _currentState = _navigation.MoveLeft();
+                        _logger.DebugPrintLine($"Current State: {_currentState}");
                         break;
 
                     case ConsoleKey.RightArrow:
-                        _navigation.MoveRight();
+                        _currentState = _navigation.MoveRight();
+                        _logger.DebugPrintLine($"Current State: {_currentState}");
                         break;
 
                     default:

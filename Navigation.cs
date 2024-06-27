@@ -20,7 +20,7 @@
             _map.Display();
         }
 
-        public void MoveUp()
+        public State MoveUp()
         {
             _currentShipPosition = (
                 _currentShipPosition.Item1 > 0 ? _currentShipPosition.Item1 - 1 : 0,
@@ -28,9 +28,12 @@
 
             _map.ShipPosition = _currentShipPosition;
             _map.Display();
+
+            State state = _map.GetState();
+            return state;
         }
 
-        public void MoveDown()
+        public State MoveDown()
         {
             _currentShipPosition = (
                 _currentShipPosition.Item1 < _mapHeight - 1 ? _currentShipPosition.Item1 + 1 : _mapHeight - 1,
@@ -38,9 +41,12 @@
 
             _map.ShipPosition = _currentShipPosition;
             _map.Display();
+
+            State state = _map.GetState();
+            return state;
         }
 
-        public void MoveLeft()
+        public State MoveLeft()
         {
             _currentShipPosition = (
                 _currentShipPosition.Item1,
@@ -48,9 +54,12 @@
 
             _map.ShipPosition = _currentShipPosition;
             _map.Display();
+
+            State state = _map.GetState();
+            return state;
         }
 
-        public void MoveRight()
+        public State MoveRight()
         {
             _currentShipPosition = (
                 _currentShipPosition.Item1,
@@ -58,6 +67,9 @@
 
             _map.ShipPosition = _currentShipPosition;
             _map.Display();
+
+            State state = _map.GetState();
+            return state;
         }
     }
 }

@@ -2,9 +2,9 @@
 {
     internal interface INavigation
     {
-        void MoveDown();
-        void MoveLeft();
-        void MoveRight();
-        void MoveUp();
+        State MoveDown();
+        State MoveLeft();
+        State MoveRight();
+        State MoveUp();
     }
 }

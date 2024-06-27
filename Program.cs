@@ -9,6 +9,7 @@ namespace SpaceGame
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
+            builder.Services.AddSingleton<ILogger, Logger>();
             builder.Services.AddSingleton<IMap, Map>();
             builder.Services.AddSingleton<INavigation, Navigation>();
             builder.Services.AddSingleton<IGameLoop, GameLoop>();

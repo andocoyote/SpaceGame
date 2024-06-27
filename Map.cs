@@ -2,13 +2,17 @@
 {
     internal class Map : IMap
     {
-        private const bool _debugPrint = false;
+        private ILogger _logger;
+
         private const int _minStarDistance = 20;
         private const int _maxStarDistance = 50;
+        private const char _shipCharacter = '%';
+        private const char _planetCharacter = '*';
+        private const char _emtpySpaceCharacter = ' ';
+
         private int _width = 0;
         private int _height = 0;
         private char _charBehindShip = '\0';
-        private const char _shipCharacter = '%';
         private char[,]? _map = null;
 
         private (int, int) _shipPosition;
@@ -34,6 +38,11 @@
             }
         }
 
+        public Map(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public void Build(int height, int width)
         {
             Random rand = new Random();
@@ -51,19 +60,19 @@
 
                 for (int j = 0; j < _width; j++)
                 {
-                    DebugPrintLine($"Current row: {i}");
-                    DebugPrintLine($"Current index: {j}");
-                    DebugPrintLine($"Next star will be at index {starIndex}");
+                    _logger.DebugPrintLine($"Current row: {i}");
+                    _logger.DebugPrintLine($"Current index: {j}");
+                    _logger.DebugPrintLine($"Next star will be at index {starIndex}");
 
                     if (j == starIndex)
                     {
-                        DebugPrintLine($"Placing star at [{i}, {j}]");
-                        _map[i, j] = '*';
+                        _logger.DebugPrintLine($"Placing star at [{i}, {j}]");
+                        _map[i, j] = _planetCharacter;
                         starIndex = j + rand.Next(_minStarDistance, _maxStarDistance);
                     }
                     else
                     {
-                        _map[i, j] = ' ';
+                        _map[i, j] = _emtpySpaceCharacter;
                     }
                 }
             }
@@ -71,13 +80,15 @@
 
         public void Display()
         {
+            Console.Clear();
+
             if (_map == null)
             {
-                DebugPrintLine("Map has not been built yet.");
+                _logger.DebugPrintLine("Map has not been built yet.");
                 return;
             }
 
-            DebugPrintLine("Map:");
+            _logger.DebugPrintLine("Map:");
             for (int i = 0; i < _map.GetLength(0); i++)
             {
                 for (int j = 0; j < _map.GetLength(1); j++)
@@ -88,24 +99,26 @@
             }
         }
 
-        private void DebugPrint(string msg)
+        public State GetState()
         {
-            if (_debugPrint)
-            {
-#pragma warning disable CS0162 // Unreachable code detected
-                Console.Write(msg);
-#pragma warning restore CS0162 // Unreachable code detected
-            }
-        }
+            State state = State.None;
 
-        private void DebugPrintLine(string msg)
-        {
-            if (_debugPrint)
+            switch (_charBehindShip)
             {
-#pragma warning disable CS0162 // Unreachable code detected
-                Console.WriteLine(msg);
-#pragma warning restore CS0162 // Unreachable code detected
+                case _emtpySpaceCharacter:
+                    state = State.EmtpySpace;
+                    break;
+
+                case _planetCharacter:
+                    state = State.OverPlanet;
+                    break;
+
+                default:
+                    state = State.None;
+                    break;
             }
+
+            return state;
         }
     }
 }
