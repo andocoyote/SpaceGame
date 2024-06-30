@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceGame
+namespace SpaceGame.Logger
 {
-    internal class Logger : ILogger
+    internal class ConsoleLogger : ILogger
     {
         private const bool _debugPrint = true;
 

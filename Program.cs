@@ -1,5 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SpaceGame.GameLoop;
+using SpaceGame.Lander;
+using SpaceGame.Logger;
+using SpaceGame.Map;
+using SpaceGame.Navigation;
 
 namespace SpaceGame
 {
@@ -9,10 +14,11 @@ namespace SpaceGame
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-            builder.Services.AddSingleton<ILogger, Logger>();
-            builder.Services.AddSingleton<IMap, Map>();
-            builder.Services.AddSingleton<INavigation, Navigation>();
-            builder.Services.AddSingleton<IGameLoop, GameLoop>();
+            builder.Services.AddSingleton<ILogger, ConsoleLogger>();
+            builder.Services.AddSingleton<IMap, Map.Map>();
+            builder.Services.AddSingleton<INavigation, Navigation.Navigation>();
+            builder.Services.AddSingleton<ILanderLoop, LanderLoop>();
+            builder.Services.AddSingleton<IGameLoop, GameLoop.GameLoop>();
 
             using IHost host = builder.Build();
 

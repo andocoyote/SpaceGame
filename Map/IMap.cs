@@ -1,4 +1,4 @@
-﻿namespace SpaceGame
+﻿namespace SpaceGame.Map
 {
     internal interface IMap
     {

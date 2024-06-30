@@ -1,4 +1,4 @@
-﻿namespace SpaceGame
+﻿namespace SpaceGame.Navigation
 {
     internal interface INavigation
     {

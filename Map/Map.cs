@@ -1,4 +1,6 @@
-﻿namespace SpaceGame
+﻿using SpaceGame.Logger;
+
+namespace SpaceGame.Map
 {
     internal class Map : IMap
     {

@@ -1,4 +1,6 @@
-﻿namespace SpaceGame
+﻿using SpaceGame.Map;
+
+namespace SpaceGame.Navigation
 {
     internal class Navigation : INavigation
     {
