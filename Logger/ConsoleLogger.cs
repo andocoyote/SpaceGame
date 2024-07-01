@@ -8,7 +8,7 @@ namespace SpaceGame.Logger
 {
     internal class ConsoleLogger : ILogger
     {
-        private const bool _debugPrint = true;
+        private const bool _debugPrint = false;
 
         public void DebugPrint(string msg)
         {

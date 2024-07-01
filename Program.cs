@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using SpaceGame.GameLoop;
 using SpaceGame.Lander;
 using SpaceGame.Logger;
+using SpaceGame.Art;
 using SpaceGame.Map;
 using SpaceGame.Navigation;
 
@@ -21,6 +22,12 @@ namespace SpaceGame
             builder.Services.AddSingleton<IGameLoop, GameLoop.GameLoop>();
 
             using IHost host = builder.Build();
+
+            string[,] splashPage = new string[50, 100];
+            SplashPage.InitializeSplashPage(splashPage);
+            SplashPage.DisplaySplashPage(splashPage);
+
+            Thread.Sleep(3000);
 
             // Run the game
             IGameLoop gameLoop = host.Services.GetRequiredService<IGameLoop>();

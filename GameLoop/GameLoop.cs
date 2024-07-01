@@ -28,7 +28,7 @@ namespace SpaceGame.GameLoop
 
             while (runGameLoop)
             {
-                Console.WriteLine("Use arrow keys to fly.");
+                Console.WriteLine("Use arrow keys to fly (ESC to quit).");
                 var keyInfo = Console.ReadKey(intercept: true); // Read a key without displaying it
 
                 switch (keyInfo.Key)
@@ -74,6 +74,7 @@ namespace SpaceGame.GameLoop
             {
                 case State.EmtpySpace:
                     break;
+
                 case State.OverPlanet:
                     Console.Write("You are over a planet. Want to descend (y/n) :");
                     
@@ -86,8 +87,11 @@ namespace SpaceGame.GameLoop
                     {
                         _landerLoop.Run();
                     }
+
+                    _navigation.DisplayMap();
                     
                     break;
+
                 default:
                     break;
             }

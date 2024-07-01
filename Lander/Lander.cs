@@ -32,12 +32,13 @@
             _maxFuelRate = mf;  //MAXIMUM FUEL CONSUMTION RATE
             _maxThrust = mt;	//MAXIMUM THRUST
 
-	    }   //END OF USER DEFINED VALUES CONSTRUCTOR
+	    }
 
         //PERIODICALLY ASKS USER FOR FULE FLOW CHANGE
         public double ChangeFlow(double fuelFlow)
         {
-            double currentFlowRate = 0;  //CALCULATED AS FUEL FLOW / MAX FUEL RATE
+            double currentFlowRate = 0;
+            _fuelFlow = fuelFlow;
 
             //CALCULATE CURRENT FLOW RATE AS A PERCENTAGE OF THE MAX ALLOWED
             currentFlowRate = (fuelFlow / _maxFuelRate);
@@ -63,7 +64,7 @@
         }
 
         //DISPLAY CURRENT FUEL FLOW RATE
-        public void ShowFuelFlow(double fuelFlow)
+        public void ShowFuelFlow()
         {
             Console.WriteLine($"The fuel flow rate is: {_fuelFlow}");
         }

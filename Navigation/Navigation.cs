@@ -73,5 +73,10 @@ namespace SpaceGame.Navigation
             State state = _map.GetState();
             return state;
         }
+
+        public void DisplayMap()
+        {
+            _map.Display();
+        }
     }
 }

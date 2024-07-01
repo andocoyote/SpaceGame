@@ -26,6 +26,7 @@ namespace SpaceGame.Lander
             int selection;
             bool exit = false;
 
+            Console.Clear();
             InstructUser();
 
             do
@@ -121,6 +122,7 @@ namespace SpaceGame.Lander
 
                     case 3: // User wants to exit the program
                         Console.WriteLine("Exiting lander program.");
+                        exit = true;
                         break;
 
                     case 4: // User wants to display the instructions
@@ -139,6 +141,7 @@ namespace SpaceGame.Lander
         private void Fly()
         {
             bool landOrCrash = false;
+            string? flowrate = string.Empty;
 
             if (ship == null)
             {
@@ -147,10 +150,17 @@ namespace SpaceGame.Lander
 
             do
             {
-                Console.Write("What do you want to set your fuel flow rate to?: ");
-                while (!double.TryParse(Console.ReadLine(), out fuelFlow))
+                Console.Write("Enter a new fuel flow rate or press enter to keep it unchanged: ");
+
+                flowrate = Console.ReadLine();
+
+                if (flowrate != "")
                 {
-                    Console.Write("Please enter an integer or decimal value for fuel flow rate: ");
+                    while (!double.TryParse(flowrate, out fuelFlow))
+                    {
+                        Console.Write("Please enter an integer or decimal value for fuel flow rate: ");
+                        flowrate = Console.ReadLine();
+                    }
                 }
 
                 // Fuel flow rate cannot be greater than MAX_FUEL_FLOW_RATE
@@ -175,8 +185,10 @@ namespace SpaceGame.Lander
                 // Use the ship configuration to run one landing cycle
                 landOrCrash = ship.RunLandingCycle(currentFlowRate);
 
+                Console.Clear();
+
                 ship.ShowAltitude();
-                ship.ShowFuelFlow(fuelFlow);
+                ship.ShowFuelFlow();
                 ship.ShowVelocity();
                 ship.ShowTotalFuel();
 
@@ -190,7 +202,7 @@ namespace SpaceGame.Lander
             Console.WriteLine("Please choose from the following options:");
             Console.WriteLine("1. Start with the DEFAULT values");
             Console.WriteLine("2. Enter your own start values");
-            Console.WriteLine("3. Quit the game");
+            Console.WriteLine("3. Abort the landing");
             Console.WriteLine("4. Display user instructions");
             Console.WriteLine("Enter your choice: ");
 
@@ -204,10 +216,9 @@ namespace SpaceGame.Lander
 
         private void InstructUser()
         {
-            Console.WriteLine("You are about to play the Lunar Lander Game!");
             Console.WriteLine("Your mission is to land your ship on the planet.");
             Console.WriteLine("In order to accomplish this, your velocity");
-            Console.WriteLine("when you land must be 2.0 or below.  GOOD LUCK!!");
+            Console.WriteLine("when you land must be 2.0 or below.");
         }
     }
 }

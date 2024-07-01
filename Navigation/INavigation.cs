@@ -6,5 +6,6 @@
         State MoveLeft();
         State MoveRight();
         State MoveUp();
+        void DisplayMap();
     }
 }
