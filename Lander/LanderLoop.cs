@@ -1,8 +1,10 @@
-﻿using SpaceGame.Logger;
+﻿using SpaceGame.Interfaces;
+using SpaceGame.Logger;
+using SpaceGame.Models;
 
 namespace SpaceGame.Lander
 {
-    internal class LanderLoop : ILanderLoop
+    internal class LanderLoop : IScenario
     {
         //ANDREW MIKESELL
         //CS-210-A
@@ -20,11 +22,20 @@ namespace SpaceGame.Lander
         private double currentFlowRate;  // Fuel flow rate/max fuel rate
 
         private Lander? ship;
+        private DomainModel _domainModel;
 
-        public void Run()
+        public LanderLoop(
+            DomainModel domainModel)
+        {
+            _domainModel = domainModel;
+        }
+
+        public DomainModel Run()
         {
             int selection;
             bool exit = false;
+            bool landOrCrash = false;
+            bool droveOrArrived = false;
 
             Console.Clear();
             InstructUser();
@@ -40,7 +51,7 @@ namespace SpaceGame.Lander
 
                         ship.DisplayValues();
 
-                        Fly();
+                        landOrCrash = Fly();
 
                         exit = false;
                         break;
@@ -115,13 +126,19 @@ namespace SpaceGame.Lander
 
                         ship.DisplayValues();
 
-                        Fly();
+                        landOrCrash = Fly();
+
+                        if (landOrCrash)
+                        {
+                            droveOrArrived = Drive();
+                        }
 
                         exit = false;
                         break;
 
                     case 3: // User wants to exit the program
                         Console.WriteLine("Exiting lander program.");
+                        _domainModel.State = State.OnPlanet;
                         exit = true;
                         break;
 
@@ -136,16 +153,26 @@ namespace SpaceGame.Lander
                         break;
                 }
             } while (!exit);
+
+            return _domainModel;
         }
 
-        private void Fly()
+        private bool Drive()
+        {
+            bool droveOrArrived = false;
+
+            return droveOrArrived;
+        }
+
+        private bool Fly()
         {
             bool landOrCrash = false;
             string? flowrate = string.Empty;
 
             if (ship == null)
             {
-                return;
+                // TODO: this needs to return a code indicating bad state (along with crashed, landed, etc.
+                return false;
             }
 
             do
@@ -182,10 +209,10 @@ namespace SpaceGame.Lander
                 // Calculate current flow rate as (fuel flow/max fuel rate)
                 currentFlowRate = ship.ChangeFlow(fuelFlow);
 
+                Console.Clear();
+
                 // Use the ship configuration to run one landing cycle
                 landOrCrash = ship.RunLandingCycle(currentFlowRate);
-
-                Console.Clear();
 
                 ship.ShowAltitude();
                 ship.ShowFuelFlow();
@@ -193,6 +220,13 @@ namespace SpaceGame.Lander
                 ship.ShowTotalFuel();
 
             } while (!landOrCrash); // While lander has not landed or crashed
+
+            return landOrCrash;
+        }
+
+        private void VehicleMenu()
+        {
+
         }
 
         private int UserMenu()

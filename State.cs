@@ -9,8 +9,10 @@ namespace SpaceGame
     public enum State
     {
         None,
+        ExitGame,
         EmtpySpace,
         OverPlanet,
+        InitiateLanding,
         OnPlanet,
         InFight
     }

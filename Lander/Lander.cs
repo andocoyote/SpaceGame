@@ -94,7 +94,6 @@
             //FOR LOOP SIMULATES THE PASSAGE OF A SMALL AMOUNT OF TIME
             for (int i = 0; i < 30; ++i)
             {
-
                 totalMass = 0;  //INITITIALIZE TOTAL MASS TO ZERO
 
                 //CALCULATE TOTAL AMOUNT OF FUEL
@@ -143,7 +142,7 @@
 
             }
 
-            return false;  //DON'T LEAVE GAME PLAY LOOP IN MAIN
+            return false;  // Still flying- haven't landed or crashed
         }
     }
 }

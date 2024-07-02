@@ -1,65 +1,57 @@
-﻿using SpaceGame.Lander;
+﻿using SpaceGame.Interfaces;
 using SpaceGame.Logger;
+using SpaceGame.Models;
 using SpaceGame.Navigation;
-using System.Runtime.ExceptionServices;
+using SpaceGame.SpaceLoop;
 
 namespace SpaceGame.GameLoop
 {
-    internal class GameLoop : IGameLoop
+    internal class GameLoop
     {
+        private ISpaceLoop _spaceLoop;
         private INavigation _navigation;
-        private ILanderLoop _landerLoop;
+        private IScenario _landerLoop;
         private ILogger _logger;
+        private DomainModel _domainModel;
         private State _currentState;
 
         public GameLoop(
+            ISpaceLoop spaceLoop,
             INavigation navigation,
-            ILanderLoop landerLoop,
+            IScenario landerLoop,
+            DomainModel domainModel,
             ILogger logger)
         {
+            _spaceLoop = spaceLoop;
             _navigation = navigation;
             _landerLoop = landerLoop;
+            _domainModel = domainModel;
             _logger = logger;
         }
 
         public void Run()
         {
+            _domainModel.State = State.EmtpySpace;
+
             bool runGameLoop = true;
 
             while (runGameLoop)
             {
-                Console.WriteLine("Use arrow keys to fly (ESC to quit).");
-                var keyInfo = Console.ReadKey(intercept: true); // Read a key without displaying it
+                _domainModel = _spaceLoop.Run();
 
-                switch (keyInfo.Key)
+                if (_domainModel.State == State.ExitGame)
                 {
-                    case ConsoleKey.Escape:
-                        runGameLoop = false;
-                        break;
+                    break;
+                }
 
-                    case ConsoleKey.UpArrow:
-                        _currentState = _navigation.MoveUp();
-                        ProcessCurrentState();
-                        break;
+                if (_domainModel.State == State.InitiateLanding)
+                {
+                    _domainModel = _landerLoop.Run();
+                }
 
-                    case ConsoleKey.DownArrow:
-                        _currentState = _navigation.MoveDown();
-                        ProcessCurrentState();
-                        break;
-
-                    case ConsoleKey.LeftArrow:
-                        _currentState = _navigation.MoveLeft();
-                        ProcessCurrentState();
-                        break;
-
-                    case ConsoleKey.RightArrow:
-                        _currentState = _navigation.MoveRight();
-                        ProcessCurrentState();
-                        break;
-
-                    default:
-                        Console.WriteLine($"Invalid command entered: {keyInfo.KeyChar}");
-                        break;
+                if (_domainModel.State == State.OverPlanet)
+                {
+                    _domainModel = _spaceLoop.Run();
                 }
             }
         }
@@ -70,14 +62,14 @@ namespace SpaceGame.GameLoop
 
             char selection;
 
-            switch ( _currentState )
+            switch (_currentState)
             {
                 case State.EmtpySpace:
                     break;
 
                 case State.OverPlanet:
                     Console.Write("You are over a planet. Want to descend (y/n) :");
-                    
+
                     while (!char.TryParse(Console.ReadLine(), out selection))
                     {
 
@@ -89,7 +81,7 @@ namespace SpaceGame.GameLoop
                     }
 
                     _navigation.DisplayMap();
-                    
+
                     break;
 
                 default:
