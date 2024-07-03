@@ -1,5 +1,4 @@
-﻿using SpaceGame.Interfaces;
-using SpaceGame.Logger;
+﻿using SpaceGame.Logger;
 using SpaceGame.Models;
 using SpaceGame.Navigation;
 
@@ -8,19 +7,16 @@ namespace SpaceGame.SpaceLoop
     internal class SpaceLoop : ISpaceLoop
     {
         private INavigation _navigation;
-        private IScenario _landerLoop;
         private ILogger _logger;
         private State _currentState;
         private DomainModel _domainModel;
 
         public SpaceLoop(
             INavigation navigation,
-            IScenario landerLoop,
             DomainModel domainModel,
             ILogger logger)
         {
             _navigation = navigation;
-            _landerLoop = landerLoop;
             _domainModel = domainModel;
             _logger = logger;
         }
@@ -100,10 +96,7 @@ namespace SpaceGame.SpaceLoop
                     {
                         _domainModel.State = State.InitiateLanding;
                         continueScenario = false;
-                        //_landerLoop.Run();
                     }
-
-                    //_navigation.DisplayMap();
                     
                     break;
 

@@ -10,20 +10,17 @@ namespace SpaceGame.GameLoop
     internal class GameLoop
     {
         private ISpaceLoop _spaceLoop;
-        private INavigation _navigation;
         private IScenario _landerLoop;
         private ILogger _logger;
         private DomainModel _domainModel;
 
         public GameLoop(
             ISpaceLoop spaceLoop,
-            INavigation navigation,
             IScenario landerLoop,
             DomainModel domainModel,
             ILogger logger)
         {
             _spaceLoop = spaceLoop;
-            _navigation = navigation;
             _landerLoop = landerLoop;
             _domainModel = domainModel;
             _logger = logger;
