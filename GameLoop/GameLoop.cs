@@ -1,4 +1,5 @@
-﻿using SpaceGame.Interfaces;
+﻿using SpaceGame.Art;
+using SpaceGame.Interfaces;
 using SpaceGame.Logger;
 using SpaceGame.Models;
 using SpaceGame.Navigation;
@@ -13,7 +14,6 @@ namespace SpaceGame.GameLoop
         private IScenario _landerLoop;
         private ILogger _logger;
         private DomainModel _domainModel;
-        private State _currentState;
 
         public GameLoop(
             ISpaceLoop spaceLoop,
@@ -32,60 +32,40 @@ namespace SpaceGame.GameLoop
         public void Run()
         {
             _domainModel.State = State.EmtpySpace;
-
             bool runGameLoop = true;
 
+            SplashPage.DisplaySplashPage();
+
+            Thread.Sleep(5000);
+
+            // Examine the Domain Model State property and load the corresponding scenario
             while (runGameLoop)
             {
-                _domainModel = _spaceLoop.Run();
-
-                if (_domainModel.State == State.ExitGame)
+                switch (_domainModel.State)
                 {
-                    break;
+                    case State.None:
+                    case State.EmtpySpace:
+                        _domainModel = _spaceLoop.Run();
+                        break;
+
+                    case State.InitiateLanding:
+                        _domainModel = _landerLoop.Run();
+                        break;
+
+                    case State.OverPlanet:
+                        _domainModel = _spaceLoop.Run();
+                        break;
+
+                    case State.ExitGame:
+                        runGameLoop = false;
+                        break;
+
+                    default:
+                        Console.WriteLine($"Unhandled State: {_domainModel.State}. Exiting game loop.");
+                        runGameLoop = false;
+                        break;
+
                 }
-
-                if (_domainModel.State == State.InitiateLanding)
-                {
-                    _domainModel = _landerLoop.Run();
-                }
-
-                if (_domainModel.State == State.OverPlanet)
-                {
-                    _domainModel = _spaceLoop.Run();
-                }
-            }
-        }
-
-        private void ProcessCurrentState()
-        {
-            _logger.DebugPrintLine($"Current State: {_currentState}");
-
-            char selection;
-
-            switch (_currentState)
-            {
-                case State.EmtpySpace:
-                    break;
-
-                case State.OverPlanet:
-                    Console.Write("You are over a planet. Want to descend (y/n) :");
-
-                    while (!char.TryParse(Console.ReadLine(), out selection))
-                    {
-
-                    }
-
-                    if (selection == 'y')
-                    {
-                        _landerLoop.Run();
-                    }
-
-                    _navigation.DisplayMap();
-
-                    break;
-
-                default:
-                    break;
             }
         }
     }

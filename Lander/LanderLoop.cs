@@ -138,7 +138,7 @@ namespace SpaceGame.Lander
 
                     case 3: // User wants to exit the program
                         Console.WriteLine("Exiting lander program.");
-                        _domainModel.State = State.OnPlanet;
+                        _domainModel.State = State.OverPlanet;
                         exit = true;
                         break;
 

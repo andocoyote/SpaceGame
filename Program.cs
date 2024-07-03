@@ -27,12 +27,6 @@ namespace SpaceGame
 
             using IHost host = builder.Build();
 
-            string[,] splashPage = new string[50, 100];
-            SplashPage.InitializeSplashPage(splashPage);
-            SplashPage.DisplaySplashPage(splashPage);
-
-            Thread.Sleep(3000);
-
             // Run the game
             GameLoop.GameLoop gameLoop = host.Services.GetRequiredService<GameLoop.GameLoop>();
             gameLoop.Run();

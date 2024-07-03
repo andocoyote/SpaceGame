@@ -2,61 +2,56 @@
 {
     internal static class SplashPage
     {
-        public static void InitializeSplashPage(string[,] splashPage)
-        {
-            // Initialize all cells with spaces
-            for (int i = 0; i < splashPage.GetLength(0); i++)
-            {
-                for (int j = 0; j < splashPage.GetLength(1); j++)
-                {
-                    splashPage[i, j] = " ";
-                }
-            }
-
-            // Add spaceship
-            string[] spaceship = {
-                "            _",
-                "           /^\\",
-                "          /___\\",
-                "         |=   =|",
-                "         |     |",
-                "         |     |",
-                "         |     |",
-                "         |_____|",
-                "        /|_____|\\",
-                "       /_|_____|_\\",
-                "      //|   |   |\\\\",
-                "     // |   |   | \\\\",
-                "    //  |   |   |  \\\\",
-                "   //   |   |   |   \\\\",
-                "  //    |   |   |    \\\\",
-                " //     |   |   |     \\\\",
-                "//      |   |   |      \\\\",
-                "        |   |   |",
-                "        |   |   |",
-                "        |___|___|",
+        private static string[] graphic = {
+                @"* **  *  *   *  * *    *  *    **      *  *  *  * **  *   * * * **  *   ",
+                @" *  *   *  **  *     *  *  *   * **  * *    **      *   **   * *  *   * ",
+                @"*    *  *  *      *  *  *  *    *   * ----+.  *  **  *   *   *      *  *",
+                @"   *    *    *     *    *   *  *   *:=.    +.    **   *    *   *    *   ",
+                @"*   *     *      *      *    *    .=:       =:   *   *   *  *  *      * ",
+                @"   *        *      *  *   **    .=-          =-   *  .-----   **    *   ",
+                @"  *  *        *     *           --             --   =-    +.    *  *   *",
+                @"   *     *        *     **   -=.              +::=+=      .+     *     *",
+                @"*     *      *  *   :------==--------------=+    --      =-             ",
+                @"                   .=:                      +      -    -=              ",
+                @"           :--------                       *---:      --  __            ",
+                @"       .--:. :------=:                                *==/  |           ",
+                @"      ==   :*.      .+                                *     |           ",
+                @"       :--:..------:=-                                *==\__|           ",
+                @"           :------=-                       *----      =-                ",
+                @"                   :=.                     .+      :    =-              ",
+                @"                     -------==-------       .+    --     .=-            ",
+                @"                             -=               +::-+=      .+            ",
+                @"                               =-             -=.   =:    =.            ",
+                @"   *     *          *     **    .=:          --      :-----             ",
+                @"  *           *        *          .=.       =:                          ",
+                @" *         *       *           *    -=     =:                           ",
+                @"      *           *                   ----=.                            ",
+                @" *           *                  *                      *                ",
+                @"* _________     *           *           ________           *           *",
+                @" /   _____/__________    ____  ____    /  _____/_____    _____   ____   ",
+                @" \_____  \\____ \__  \ _/ ___\/ __ \  /   \  ___\__  \  /     \_/ __ \  ",
+                @" /        \  |_> > __ \\  \__\  ___/  \    \_\  \/ __ \|  Y Y  \  ___/  ",
+                @"/_______  /   __(____  /\___  >___  >  \______  (____  /__|_|  /\___  > ",
+                @"        \/|__|       \/     \/    \/          \/     \/      \/     \/  ",
+                @"   *           *                  *                      *             *",
+                @"  *                        *                                     *      ",
+                @"          *                             *                             * "
             };
 
-            int spaceshipRow = 20;
-            foreach (string line in spaceship)
-            {
-                for (int i = 0; i < line.Length; i++)
-                {
-                    splashPage[spaceshipRow, 40 + i] = line[i].ToString();
-                }
-                spaceshipRow++;
-            }
-        }
-
-        public static void DisplaySplashPage(string[,] splashPage)
+        public static void DisplaySplashPage()
         {
-            for (int i = 0; i < splashPage.GetLength(0); i++)
+            /*for (int i = 0; i < graphic.GetLength(0); i++)
             {
-                for (int j = 0; j < splashPage.GetLength(1); j++)
+                for (int j = 0; j < graphic.GetLength(1); j++)
                 {
-                    Console.Write(splashPage[i, j]);
+                    Console.Write(graphic[i, j]);
                 }
                 Console.WriteLine();
+            }*/
+
+            foreach (var graphic in graphic)
+            {
+                Console.WriteLine(graphic);
             }
         }
     }
