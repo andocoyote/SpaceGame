@@ -114,8 +114,7 @@
                     _totalFuel = 0;  //SET TOTAL FUEL TO ZERO
                     _fuelFlow = 0;   //SET FUEL FLOW RATE TO ZERO
 
-                    Console.WriteLine($"OUT OF FUEL!!!");
-                    Console.WriteLine($"GAME OVER!");
+                    Console.WriteLine($"You ran out of fuel and will crash into the planet.");
                     return true;
                 }
 
@@ -125,7 +124,7 @@
                     _altitude = 0;   //SET ALTITUDE TO ZERO
                     _fuelFlow = 0;   //SET FUEL FLOW RATE TO ZERO
 
-                    Console.WriteLine($"YOU LANDED SUCCESSFULLY!!! CONGRADULATIONS!!!");
+                    Console.WriteLine($"You've landed successfully!");
                     return true;
                 }
 
@@ -135,8 +134,7 @@
                     _altitude = 0;   //SET ALTITUDE TO ZERO
                     _fuelFlow = 0;   //SET FUEL FLOW RATE TO ZERO
 
-                    Console.WriteLine($"YOUR LANDER HAS SMASHED INTO THE Planet!!!");
-                    Console.WriteLine($"GAME OVER!");
+                    Console.WriteLine($"Your lander has smashed into the planet!");
                     return true;
                 }
 

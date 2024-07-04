@@ -1,5 +1,5 @@
 ﻿using SpaceGame.Interfaces;
-using SpaceGame.Logger;
+using SpaceGame.Loggers;
 using SpaceGame.Models;
 
 namespace SpaceGame.Lander
@@ -229,7 +229,7 @@ namespace SpaceGame.Lander
             int choice;
 
             Console.WriteLine("Please choose from the following options:");
-            Console.WriteLine("1. Start with the DEFAULT values");
+            Console.WriteLine("1. Start with the default values");
             Console.WriteLine("2. Enter your own start values");
             Console.WriteLine("3. Abort the landing");
             Console.WriteLine("4. Display user instructions");
@@ -245,9 +245,10 @@ namespace SpaceGame.Lander
 
         private void InstructUser()
         {
-            Console.WriteLine("Your mission is to land your ship on the planet.");
+            Console.WriteLine("You will attempt to land your ship on the planet.");
             Console.WriteLine("In order to accomplish this, your velocity");
             Console.WriteLine("when you land must be 2.0 or below.");
+            Console.WriteLine("Be careful- if you descend too fast, it will be impossible to slow down in time.");
         }
     }
 }

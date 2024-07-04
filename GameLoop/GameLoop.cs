@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SpaceGame.Art;
 using SpaceGame.Interfaces;
-using SpaceGame.Logger;
+using SpaceGame.Loggers;
 using SpaceGame.Models;
 using SpaceGame.Navigation;
-using SpaceGame.SpaceLoop;
+using SpaceGame.Space;
 
 namespace SpaceGame.GameLoop
 {

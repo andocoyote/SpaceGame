@@ -1,9 +1,9 @@
 ﻿using SpaceGame.Interfaces;
-using SpaceGame.Logger;
+using SpaceGame.Loggers;
 
-namespace SpaceGame.Map
+namespace SpaceGame.Maps
 {
-    internal class Map : IMap
+    internal class SpaceMap : IMap
     {
         private ILogger _logger;
 
@@ -41,7 +41,7 @@ namespace SpaceGame.Map
             }
         }
 
-        public Map(ILogger logger)
+        public SpaceMap(ILogger logger)
         {
             _logger = logger;
         }

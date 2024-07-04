@@ -1,9 +1,9 @@
 ﻿using SpaceGame.Interfaces;
-using SpaceGame.Logger;
+using SpaceGame.Loggers;
 using SpaceGame.Models;
 using SpaceGame.Navigation;
 
-namespace SpaceGame.SpaceLoop
+namespace SpaceGame.Space
 {
     internal class SpaceLoop : IScenario
     {
@@ -23,9 +23,7 @@ namespace SpaceGame.SpaceLoop
 
         public DomainModel Run()
         {
-            bool runSpaceLoop = true;
-
-            ProcessCurrentState();
+            bool runSpaceLoop = ProcessCurrentState();
 
             while (runSpaceLoop)
             {

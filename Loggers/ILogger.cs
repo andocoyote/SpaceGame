@@ -1,4 +1,4 @@
-﻿namespace SpaceGame.Logger
+﻿namespace SpaceGame.Loggers
 {
     internal interface ILogger
     {
