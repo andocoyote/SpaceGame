@@ -10,11 +10,17 @@ namespace SpaceGame.Vehicle
 {
     internal class VehicleLoop : IScenario
     {
-        public VehicleLoop() { }
+        private DomainModel _domainModel;
+
+        public VehicleLoop(
+            DomainModel domainModel)
+        {
+            _domainModel = domainModel;
+        }
 
         public DomainModel Run()
         {
-            return null;
+            return _domainModel;
         }
     }
 }

@@ -1,14 +1,14 @@
-﻿using SpaceGame.Logger;
+﻿using SpaceGame.Interfaces;
+using SpaceGame.Logger;
 using SpaceGame.Models;
 using SpaceGame.Navigation;
 
 namespace SpaceGame.SpaceLoop
 {
-    internal class SpaceLoop : ISpaceLoop
+    internal class SpaceLoop : IScenario
     {
         private INavigation _navigation;
         private ILogger _logger;
-        private State _currentState;
         private DomainModel _domainModel;
 
         public SpaceLoop(
@@ -25,7 +25,7 @@ namespace SpaceGame.SpaceLoop
         {
             bool runSpaceLoop = true;
 
-            _navigation.DisplayMap();
+            ProcessCurrentState();
 
             while (runSpaceLoop)
             {
@@ -40,26 +40,22 @@ namespace SpaceGame.SpaceLoop
                         break;
 
                     case ConsoleKey.UpArrow:
-                        _currentState = _navigation.MoveUp();
-                        _navigation.DisplayMap();
+                        _domainModel.State = _navigation.MoveUp();
                         runSpaceLoop = ProcessCurrentState();
                         break;
 
                     case ConsoleKey.DownArrow:
-                        _currentState = _navigation.MoveDown();
-                        _navigation.DisplayMap();
+                        _domainModel.State = _navigation.MoveDown();
                         runSpaceLoop = ProcessCurrentState();
                         break;
 
                     case ConsoleKey.LeftArrow:
-                        _currentState = _navigation.MoveLeft();
-                        _navigation.DisplayMap();
+                        _domainModel.State = _navigation.MoveLeft();
                         runSpaceLoop = ProcessCurrentState();
                         break;
 
                     case ConsoleKey.RightArrow:
-                        _currentState = _navigation.MoveRight();
-                        _navigation.DisplayMap();
+                        _domainModel.State = _navigation.MoveRight();
                         runSpaceLoop = ProcessCurrentState();
                         break;
 
@@ -74,17 +70,19 @@ namespace SpaceGame.SpaceLoop
 
         private bool ProcessCurrentState()
         {
-            bool continueScenario = false;
-            _logger.DebugPrintLine($"Current State: {_currentState}");
+            bool continueScenario = true;
+            _logger.DebugPrintLine($"Current State: {_domainModel.State}");
 
             char selection;
 
-            switch ( _currentState )
+            switch (_domainModel.State)
             {
                 case State.EmtpySpace:
+                    _navigation.DisplayMap();
                     break;
 
                 case State.OverPlanet:
+                    _navigation.DisplayMap();
                     Console.Write("You are over a planet. Want to descend (y/n) :");
                     
                     while (!char.TryParse(Console.ReadLine(), out selection))

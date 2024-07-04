@@ -224,11 +224,6 @@ namespace SpaceGame.Lander
             return landOrCrash;
         }
 
-        private void VehicleMenu()
-        {
-
-        }
-
         private int UserMenu()
         {
             int choice;

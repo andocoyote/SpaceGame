@@ -1,4 +1,5 @@
-﻿using SpaceGame.Art;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SpaceGame.Art;
 using SpaceGame.Interfaces;
 using SpaceGame.Logger;
 using SpaceGame.Models;
@@ -9,19 +10,22 @@ namespace SpaceGame.GameLoop
 {
     internal class GameLoop
     {
-        private ISpaceLoop _spaceLoop;
+        private IScenario _spaceLoop;
         private IScenario _landerLoop;
+        private IScenario _vehicleLoop;
         private ILogger _logger;
         private DomainModel _domainModel;
 
         public GameLoop(
-            ISpaceLoop spaceLoop,
-            IScenario landerLoop,
+            [FromKeyedServices("Space")] IScenario spaceLoop,
+            [FromKeyedServices("Lander")] IScenario landerLoop,
+            [FromKeyedServices("Vehicle")] IScenario vehicleloop,
             DomainModel domainModel,
             ILogger logger)
         {
             _spaceLoop = spaceLoop;
             _landerLoop = landerLoop;
+            _vehicleLoop = vehicleloop;
             _domainModel = domainModel;
             _logger = logger;
         }

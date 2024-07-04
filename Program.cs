@@ -20,8 +20,9 @@ namespace SpaceGame
             builder.Services.AddSingleton<ILogger, ConsoleLogger>();
             builder.Services.AddSingleton<IMap, Map.Map>();
             builder.Services.AddSingleton<INavigation, Navigation.Navigation>();
-            builder.Services.AddSingleton<IScenario, LanderLoop>();
-            builder.Services.AddSingleton<ISpaceLoop, SpaceLoop.SpaceLoop>();
+            builder.Services.AddKeyedSingleton<IScenario, LanderLoop>("Lander");
+            builder.Services.AddKeyedSingleton<IScenario, SpaceLoop.SpaceLoop>("Space");
+            builder.Services.AddKeyedSingleton<IScenario, SpaceLoop.SpaceLoop>("Vehicle");
             builder.Services.AddSingleton<DomainModel>();
             builder.Services.AddSingleton<GameLoop.GameLoop>();
 
