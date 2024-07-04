@@ -1,4 +1,4 @@
-﻿using SpaceGame.Map;
+﻿using SpaceGame.Interfaces;
 
 namespace SpaceGame.Navigation
 {
@@ -18,7 +18,7 @@ namespace SpaceGame.Navigation
             // Build the map and assign the ship to a random location on the map
             _currentShipPosition = (rand.Next(_mapHeight - 1), rand.Next(_mapWidth - 1));
             _map.Build(_mapHeight, _mapWidth);
-            _map.ShipPosition = _currentShipPosition;
+            _map.Position = _currentShipPosition;
         }
 
         public State MoveUp()
@@ -27,7 +27,7 @@ namespace SpaceGame.Navigation
                 _currentShipPosition.Item1 > 0 ? _currentShipPosition.Item1 - 1 : 0,
                 _currentShipPosition.Item2);
 
-            _map.ShipPosition = _currentShipPosition;
+            _map.Position = _currentShipPosition;
 
             State state = _map.GetState();
             return state;
@@ -39,7 +39,7 @@ namespace SpaceGame.Navigation
                 _currentShipPosition.Item1 < _mapHeight - 1 ? _currentShipPosition.Item1 + 1 : _mapHeight - 1,
                 _currentShipPosition.Item2);
 
-            _map.ShipPosition = _currentShipPosition;
+            _map.Position = _currentShipPosition;
 
             State state = _map.GetState();
             return state;
@@ -51,7 +51,7 @@ namespace SpaceGame.Navigation
                 _currentShipPosition.Item1,
                 _currentShipPosition.Item2 > 0 ? _currentShipPosition.Item2 - 1 : 0);
 
-            _map.ShipPosition = _currentShipPosition;
+            _map.Position = _currentShipPosition;
 
             State state = _map.GetState();
             return state;
@@ -63,7 +63,7 @@ namespace SpaceGame.Navigation
                 _currentShipPosition.Item1,
                 _currentShipPosition.Item2 < _mapWidth - 1 ? _currentShipPosition.Item2 + 1 : _mapWidth - 1);
 
-            _map.ShipPosition = _currentShipPosition;
+            _map.Position = _currentShipPosition;
 
             State state = _map.GetState();
             return state;

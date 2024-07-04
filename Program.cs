@@ -4,7 +4,6 @@ using SpaceGame.SpaceLoop;
 using SpaceGame.Lander;
 using SpaceGame.Logger;
 using SpaceGame.Art;
-using SpaceGame.Map;
 using SpaceGame.Navigation;
 using SpaceGame.Interfaces;
 using SpaceGame.Models;

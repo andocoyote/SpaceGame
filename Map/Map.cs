@@ -1,4 +1,5 @@
-﻿using SpaceGame.Logger;
+﻿using SpaceGame.Interfaces;
+using SpaceGame.Logger;
 
 namespace SpaceGame.Map
 {
@@ -18,7 +19,7 @@ namespace SpaceGame.Map
         private char[,]? _map = null;
 
         private (int, int) _shipPosition;
-        public (int, int) ShipPosition
+        public (int, int) Position
         {
             get => _shipPosition;
             set
