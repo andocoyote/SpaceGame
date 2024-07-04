@@ -103,22 +103,22 @@ namespace SpaceGame.Maps
             }
         }
 
-        public State GetState()
+        public GameState GetState()
         {
-            State state = State.None;
+            GameState state = GameState.None;
 
             switch (_charBehindShip)
             {
                 case _emtpySpaceCharacter:
-                    state = State.EmtpySpace;
+                    state = GameState.EmtpySpace;
                     break;
 
                 case _planetCharacter:
-                    state = State.OverPlanet;
+                    state = GameState.OverPlanet;
                     break;
 
                 default:
-                    state = State.None;
+                    state = GameState.None;
                     break;
             }
 

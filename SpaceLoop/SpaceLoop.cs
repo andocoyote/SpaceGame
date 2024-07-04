@@ -33,27 +33,27 @@ namespace SpaceGame.Space
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.Escape:
-                        _domainModel.State = State.ExitGame;
+                        _domainModel.GameState = GameState.ExitGame;
                         runSpaceLoop = false;
                         break;
 
                     case ConsoleKey.UpArrow:
-                        _domainModel.State = _navigation.MoveUp();
+                        _domainModel.GameState = _navigation.MoveUp();
                         runSpaceLoop = ProcessCurrentState();
                         break;
 
                     case ConsoleKey.DownArrow:
-                        _domainModel.State = _navigation.MoveDown();
+                        _domainModel.GameState = _navigation.MoveDown();
                         runSpaceLoop = ProcessCurrentState();
                         break;
 
                     case ConsoleKey.LeftArrow:
-                        _domainModel.State = _navigation.MoveLeft();
+                        _domainModel.GameState = _navigation.MoveLeft();
                         runSpaceLoop = ProcessCurrentState();
                         break;
 
                     case ConsoleKey.RightArrow:
-                        _domainModel.State = _navigation.MoveRight();
+                        _domainModel.GameState = _navigation.MoveRight();
                         runSpaceLoop = ProcessCurrentState();
                         break;
 
@@ -69,17 +69,17 @@ namespace SpaceGame.Space
         private bool ProcessCurrentState()
         {
             bool continueScenario = true;
-            _logger.DebugPrintLine($"Current State: {_domainModel.State}");
+            _logger.DebugPrintLine($"Current State: {_domainModel.GameState}");
 
             char selection;
 
-            switch (_domainModel.State)
+            switch (_domainModel.GameState)
             {
-                case State.EmtpySpace:
+                case GameState.EmtpySpace:
                     _navigation.DisplayMap();
                     break;
 
-                case State.OverPlanet:
+                case GameState.OverPlanet:
                     _navigation.DisplayMap();
                     Console.Write("You are over a planet. Want to descend (y/n) :");
                     
@@ -90,7 +90,7 @@ namespace SpaceGame.Space
 
                     if (selection == 'y')
                     {
-                        _domainModel.State = State.InitiateLanding;
+                        _domainModel.GameState = GameState.InitiateLanding;
                         continueScenario = false;
                     }
                     

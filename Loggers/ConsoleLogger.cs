@@ -2,7 +2,7 @@
 {
     internal class ConsoleLogger : ILogger
     {
-        private const bool _debugPrint = false;
+        private const bool _debugPrint = true;
 
         public void DebugPrint(string msg)
         {

@@ -9,6 +9,6 @@ namespace SpaceGame.Interfaces
         void Build(int height, int width);
         void Display();
 
-        State GetState();
+        GameState GetState();
     }
 }

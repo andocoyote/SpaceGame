@@ -1,6 +1,6 @@
 ﻿namespace SpaceGame.Models
 {
-    public enum State
+    public enum GameState
     {
         None = 0,
         ExitGame = 1,

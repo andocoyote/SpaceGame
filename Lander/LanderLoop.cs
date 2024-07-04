@@ -12,7 +12,7 @@ namespace SpaceGame.Lander
 
         private const double MAX_FUEL_FLOW_RATE = 10.0;
 
-        private double fuelFlow;            // Current fuel flow rate
+        private double fuelFlowRate;        // Current fuel flow rate
         private double velocity;            // Current velocity
         private double altitude;            // Current altitude
         private double totalFuel;           // Current amount of fuel
@@ -22,7 +22,7 @@ namespace SpaceGame.Lander
         private double currentFlowRate;     // Fuel flow rate/max fuel rate
         private double freeFallAcceleration;// The affect planet gravity has on velocity
 
-        private Lander? ship;
+        private Lander? _lander;
         private DomainModel _domainModel;
         private LanderState _landerState = LanderState.None;
 
@@ -37,7 +37,6 @@ namespace SpaceGame.Lander
             int selection;
             bool exit = false;
             bool landOrCrash = false;
-            bool droveOrArrived = false;
 
             Console.Clear();
             InstructUser();
@@ -49,9 +48,9 @@ namespace SpaceGame.Lander
                 switch (selection)
                 {
                     case 1: // Play using default values
-                        ship = new Lander();
+                        _lander = new Lander();
 
-                        ship.DisplayValues();
+                        _lander.DisplayValues();
 
                         landOrCrash = Fly();
 
@@ -66,25 +65,25 @@ namespace SpaceGame.Lander
                         }
 
                         Console.WriteLine($"Enter your starting throttle rate (0-{maxFuel} only): ");
-                        while (!double.TryParse(Console.ReadLine(), out fuelFlow))
+                        while (!double.TryParse(Console.ReadLine(), out fuelFlowRate))
                         {
                             Console.Write("Please enter an integer or decimal value for fuel flow rate: ");
                         }
 
                         // Fuel flow rate cannot be larger than maximum fuel consumption rate
-                        if (fuelFlow > maxFuel)
+                        if (fuelFlowRate > maxFuel)
                         {
                             Console.WriteLine($"Fuel flow rate must be 0 through {maxFuel}!");
                             Console.WriteLine($"Setting fuel flow to {maxFuel}");
-                            fuelFlow = maxFuel;
+                            fuelFlowRate = maxFuel;
                         }
 
                         // Fuel flow rate cannot be less then zero
-                        if (fuelFlow < 0)
+                        if (fuelFlowRate < 0)
                         {
                             Console.WriteLine($"Fuel flow rate must be 0 through {maxFuel}!");
                             Console.WriteLine($"Setting fuel flow to 0");
-                            fuelFlow = 0;
+                            fuelFlowRate = 0;
                         }
 
                         // Get starting velocity
@@ -131,23 +130,18 @@ namespace SpaceGame.Lander
                         }
 
                         // Build the lander
-                        ship = new Lander(fuelFlow, velocity, altitude, totalFuel, landerMass, maxFuel, maxThrust, freeFallAcceleration);
+                        _lander = new Lander(fuelFlowRate, velocity, altitude, totalFuel, landerMass, maxFuel, maxThrust, freeFallAcceleration);
 
-                        ship.DisplayValues();
+                        _lander.DisplayValues();
 
                         landOrCrash = Fly();
-
-                        if (landOrCrash)
-                        {
-                            droveOrArrived = Drive();
-                        }
 
                         exit = false;
                         break;
 
                     case 3: // User wants to exit the program
                         Console.WriteLine("Exiting lander program.");
-                        _domainModel.State = State.OverPlanet;
+                        _domainModel.GameState = GameState.OverPlanet;
                         exit = true;
                         break;
 
@@ -166,19 +160,12 @@ namespace SpaceGame.Lander
             return _domainModel;
         }
 
-        private bool Drive()
-        {
-            bool droveOrArrived = false;
-
-            return droveOrArrived;
-        }
-
         private bool Fly()
         {
             bool landOrCrash = false;
             string? flowrate = string.Empty;
 
-            if (ship == null)
+            if (_lander == null)
             {
                 // TODO: this needs to return a code indicating bad state (along with crashed, landed, etc.
                 return false;
@@ -192,7 +179,7 @@ namespace SpaceGame.Lander
 
                 if (flowrate != "")
                 {
-                    while (!double.TryParse(flowrate, out fuelFlow))
+                    while (!double.TryParse(flowrate, out fuelFlowRate))
                     {
                         Console.Write("Please enter an integer or decimal value for fuel flow rate: ");
                         flowrate = Console.ReadLine();
@@ -200,35 +187,35 @@ namespace SpaceGame.Lander
                 }
 
                 // Fuel flow rate cannot be greater than MAX_FUEL_FLOW_RATE
-                if (fuelFlow > MAX_FUEL_FLOW_RATE)
+                if (fuelFlowRate > MAX_FUEL_FLOW_RATE)
                 {
                     Console.WriteLine("Fuel flow rate must be 0 through 10.");
                     Console.WriteLine("Setting fuel flow to 10.");
-                    fuelFlow = MAX_FUEL_FLOW_RATE;
+                    fuelFlowRate = MAX_FUEL_FLOW_RATE;
                 }
 
                 // Fuel flow rate cannot be less than zero
-                if (fuelFlow < 0)
+                if (fuelFlowRate < 0)
                 {
                     Console.WriteLine("Fuel flow rate must be 0 through 10.");
                     Console.WriteLine("Setting fuel flow to 0");
-                    fuelFlow = 0;
+                    fuelFlowRate = 0;
                 }
 
                 // Calculate current flow rate as (fuel flow/max fuel rate)
-                currentFlowRate = ship.ChangeFlow(fuelFlow);
+                currentFlowRate = _lander.ChangeFlow(fuelFlowRate);
 
                 Console.Clear();
 
                 // Use the ship configuration to run one landing cycle
-                _landerState = ship.RunLandingCycle(currentFlowRate);
+                _landerState = _lander.RunLandingCycle(currentFlowRate);
 
                 landOrCrash = ProcessCurrentState();
 
-                ship.ShowAltitude();
-                ship.ShowFuelFlow();
-                ship.ShowVelocity();
-                ship.ShowTotalFuel();
+                Console.WriteLine($"Your altitude is: {_lander.Altitude}");
+                Console.WriteLine($"The fuel flow rate is: {_lander.FuelFlowRate}");
+                Console.WriteLine($"The total fuel is: {_lander.TotalFuel}");
+                Console.WriteLine($"Your velocity is: {_lander.Velocity}");
 
             } while (!landOrCrash); // While lander has not landed or crashed
 
@@ -245,6 +232,7 @@ namespace SpaceGame.Lander
                     break;
                 case LanderState.Landed:
                     Console.WriteLine($"You've landed successfully!");
+                    SetDomainModelLanderProperties();
                     exitLanderLoop = true;
                     break;
                 case LanderState.OutOfFuel:
@@ -261,6 +249,25 @@ namespace SpaceGame.Lander
 
             return exitLanderLoop;
         }
+
+        // Keep track of the current lander properties for use in the Domain Model
+        private void SetDomainModelLanderProperties()
+        {
+            if (_lander == null)
+            {
+                return;
+            }
+
+            _domainModel.LanderProperties.LanderState = _landerState;
+            _domainModel.LanderProperties.FuelFlowRate = _lander.FuelFlowRate;
+            _domainModel.LanderProperties.Altitude = _lander.Altitude;
+            _domainModel.LanderProperties.TotalFuel = _lander.TotalFuel;
+            _domainModel.LanderProperties.LanderMass = _lander.LanderMass;
+            _domainModel.LanderProperties.TotalMass = _lander.TotalMass;
+            _domainModel.LanderProperties.MaxFuelRate = _lander.MaxFuelRate;
+            _domainModel.LanderProperties.MaxThrust = _lander.MaxThrust;
+            _domainModel.LanderProperties.FreeFallAcceleration = _lander.FreeFallAcceleration;
+    }
 
         private int UserMenu()
         {

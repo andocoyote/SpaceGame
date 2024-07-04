@@ -2,6 +2,7 @@
 {
     internal class DomainModel
     {
-        public State State { get; set; }
+        public GameState GameState { get; set; }
+        public LanderProperties LanderProperties { get; set; } = new LanderProperties();
     }
 }

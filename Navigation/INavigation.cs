@@ -4,10 +4,10 @@ namespace SpaceGame.Navigation
 {
     internal interface INavigation
     {
-        State MoveDown();
-        State MoveLeft();
-        State MoveRight();
-        State MoveUp();
+        GameState MoveDown();
+        GameState MoveLeft();
+        GameState MoveRight();
+        GameState MoveUp();
         void DisplayMap();
     }
 }

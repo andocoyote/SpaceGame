@@ -32,7 +32,7 @@ namespace SpaceGame.GameLoop
 
         public void Run()
         {
-            _domainModel.State = State.EmtpySpace;
+            _domainModel.GameState = GameState.EmtpySpace;
             bool runGameLoop = true;
 
             SplashPage.DisplaySplashPage();
@@ -42,32 +42,49 @@ namespace SpaceGame.GameLoop
             // Examine the Domain Model State property and load the corresponding scenario
             while (runGameLoop)
             {
-                switch (_domainModel.State)
+                DumpDomainModel();
+
+                switch (_domainModel.GameState)
                 {
-                    case State.None:
-                    case State.EmtpySpace:
+                    case GameState.None:
+                    case GameState.EmtpySpace:
                         _domainModel = _spaceLoop.Run();
                         break;
 
-                    case State.InitiateLanding:
+                    case GameState.InitiateLanding:
                         _domainModel = _landerLoop.Run();
                         break;
 
-                    case State.OverPlanet:
+                    case GameState.OverPlanet:
                         _domainModel = _spaceLoop.Run();
                         break;
 
-                    case State.ExitGame:
+                    case GameState.ExitGame:
                         runGameLoop = false;
                         break;
 
                     default:
-                        Console.WriteLine($"Unhandled State: {_domainModel.State}. Exiting game loop.");
+                        Console.WriteLine($"Unhandled State: {_domainModel.GameState}. Exiting game loop.");
                         runGameLoop = false;
                         break;
 
                 }
             }
+        }
+
+        private void DumpDomainModel()
+        {
+            _logger.DebugPrintLine("Printing GameState:");
+            _logger.DebugPrintLine($"\tGameState: {_domainModel.GameState}");
+            _logger.DebugPrintLine("Printing Lander Properties:");
+            _logger.DebugPrintLine($"\tLanderState: {_domainModel.LanderProperties.LanderState}");
+            _logger.DebugPrintLine($"\tAltitude: {_domainModel.LanderProperties.Altitude}");
+            _logger.DebugPrintLine($"\tTotalFuel: {_domainModel.LanderProperties.TotalFuel}");
+            _logger.DebugPrintLine($"\tFuelFlowRate: {_domainModel.LanderProperties.FuelFlowRate}");
+            _logger.DebugPrintLine($"\tMaxFuelRate: {_domainModel.LanderProperties.MaxFuelRate}");
+            _logger.DebugPrintLine($"\tLanderMass: {_domainModel.LanderProperties.LanderMass}");
+            _logger.DebugPrintLine($"\tMaxThrust: {_domainModel.LanderProperties.MaxThrust}");
+            _logger.DebugPrintLine($"\tFreeFallAcceleration: {_domainModel.LanderProperties.FreeFallAcceleration}");
         }
     }
 }

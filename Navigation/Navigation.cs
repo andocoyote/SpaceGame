@@ -22,7 +22,7 @@ namespace SpaceGame.Navigation
             _map.Position = _currentShipPosition;
         }
 
-        public State MoveUp()
+        public GameState MoveUp()
         {
             _currentShipPosition = (
                 _currentShipPosition.Item1 > 0 ? _currentShipPosition.Item1 - 1 : 0,
@@ -30,11 +30,11 @@ namespace SpaceGame.Navigation
 
             _map.Position = _currentShipPosition;
 
-            State state = _map.GetState();
+            GameState state = _map.GetState();
             return state;
         }
 
-        public State MoveDown()
+        public GameState MoveDown()
         {
             _currentShipPosition = (
                 _currentShipPosition.Item1 < _mapHeight - 1 ? _currentShipPosition.Item1 + 1 : _mapHeight - 1,
@@ -42,11 +42,11 @@ namespace SpaceGame.Navigation
 
             _map.Position = _currentShipPosition;
 
-            State state = _map.GetState();
+            GameState state = _map.GetState();
             return state;
         }
 
-        public State MoveLeft()
+        public GameState MoveLeft()
         {
             _currentShipPosition = (
                 _currentShipPosition.Item1,
@@ -54,11 +54,11 @@ namespace SpaceGame.Navigation
 
             _map.Position = _currentShipPosition;
 
-            State state = _map.GetState();
+            GameState state = _map.GetState();
             return state;
         }
 
-        public State MoveRight()
+        public GameState MoveRight()
         {
             _currentShipPosition = (
                 _currentShipPosition.Item1,
@@ -66,7 +66,7 @@ namespace SpaceGame.Navigation
 
             _map.Position = _currentShipPosition;
 
-            State state = _map.GetState();
+            GameState state = _map.GetState();
             return state;
         }
 
