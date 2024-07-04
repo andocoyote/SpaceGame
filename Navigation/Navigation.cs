@@ -1,4 +1,5 @@
 ﻿using SpaceGame.Interfaces;
+using SpaceGame.Models;
 
 namespace SpaceGame.Navigation
 {

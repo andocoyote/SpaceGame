@@ -1,4 +1,6 @@
-﻿namespace SpaceGame.Interfaces
+﻿using SpaceGame.Models;
+
+namespace SpaceGame.Interfaces
 {
     internal interface IMap
     {

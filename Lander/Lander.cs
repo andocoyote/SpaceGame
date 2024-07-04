@@ -1,4 +1,6 @@
-﻿namespace SpaceGame.Lander
+﻿using System;
+
+namespace SpaceGame.Lander
 {
     internal class Lander
     {
@@ -9,6 +11,7 @@
         private double _landerMass;     //TOTAL MASS OF LANDER 
         private double _maxFuelRate;    //MAXIMUM FUEL CONSUMTION RATE
         private double _maxThrust;      //MAXIMUM THRUST
+        private double _freeFallAcceleration; // The affect planet gravity has on velocity
 
         public Lander()
 	    {
@@ -19,11 +22,11 @@
             _landerMass = 900;  //MASS OF THE LANDER WITHOUT FUEL
             _maxFuelRate = 10;  //MAXIMUM FUEL CONSUMTION RATE
             _maxThrust = 5000;	//MAXIMUM THRUST
-	    } 
+            _freeFallAcceleration = 1.62; // The affect planet gravity has on velocity
+        } 
 
-        public Lander(double f, double v, double a, double tf, double l, double mf, double mt)
+        public Lander(double f, double v, double a, double tf, double l, double mf, double mt, double ffa)
 	    {
-
 		    _fuelFlow = f;      //CHOSEN FUEL FLOW RATE	
 		    _velocity = v;      //CURRENT VELOCITY
             _altitude = a;      //CURRENT ALTITUDE
@@ -31,10 +34,10 @@
             _landerMass = l;    //MASS OF THE LANDER WITHOUT FUEL
             _maxFuelRate = mf;  //MAXIMUM FUEL CONSUMTION RATE
             _maxThrust = mt;	//MAXIMUM THRUST
+            _freeFallAcceleration = ffa; // The affect planet gravity has on velocity
+        }
 
-	    }
-
-        //PERIODICALLY ASKS USER FOR FULE FLOW CHANGE
+        // Change fuel flow rate
         public double ChangeFlow(double fuelFlow)
         {
             double currentFlowRate = 0;
@@ -57,90 +60,74 @@
             Console.WriteLine($"The maximum thrust of the lander's engines is: {_maxThrust}");
         }
 
-        //DISPLAY CURRENT ALTITUDE
         public void ShowAltitude()
         {
             Console.WriteLine($"Your altitude is: {_altitude}");
         }
 
-        //DISPLAY CURRENT FUEL FLOW RATE
         public void ShowFuelFlow()
         {
             Console.WriteLine($"The fuel flow rate is: {_fuelFlow}");
         }
 
-        //DISPLAY CURRENT AMOUNT OF FUEL
         public void ShowTotalFuel()
         {
             Console.WriteLine($"The total fuel is: {_totalFuel}");
         }
 
-        //DISPLAY CURRENT VELOCITY
         public void ShowVelocity()
         {
             Console.WriteLine($"Your velocity is: {_velocity}");
         }
 
-        //SIMULATE ACTION OF THE LUNAR LANDER
-        public bool RunLandingCycle(double currentFlowRate)
+        // Run the action of the lander landing on a planet
+        public LanderState RunLandingCycle(double currentFlowRate)
         {
-            double currentThrust = 0;   //CURRENT THRUST IS CURRENT FLOW RATE * MAX THRUST
-            double totalMass;           //MASS OF LANDER AND FUEL
-            double t = 0.1;             //SMALL AMOUNT OF TIME VARIABLE
+            double currentThrust = currentFlowRate * _maxThrust;    // Current thrust is current Flow Rate * Max Thrust
+            double totalMass;   // Mass of lander with fuel
+            double t = 3;       // Small amount of time passing during each cycle
+            totalMass = 0;
 
-            //CALCULATE CURRENT THRUST
-            currentThrust = (currentFlowRate * _maxThrust);
+            // Calculate fuel used during this cycle
+            _totalFuel = _totalFuel - (t * currentFlowRate);
 
-            //FOR LOOP SIMULATES THE PASSAGE OF A SMALL AMOUNT OF TIME
-            for (int i = 0; i < 30; ++i)
+            // Calculate total mass of the lander during this cycle
+            totalMass = _landerMass + _totalFuel;
+
+            // Use thrust, mass, time variable, and freeFallAcceleration to calculate velocity
+            _velocity = (_velocity) - (t * ((currentThrust / totalMass) - _freeFallAcceleration));
+
+            // Calculate altitude
+            _altitude = _altitude - (t * _velocity);
+
+            // Fuel has fallen below zero
+            if (_totalFuel < 0)
             {
-                totalMass = 0;  //INITITIALIZE TOTAL MASS TO ZERO
-
-                //CALCULATE TOTAL AMOUNT OF FUEL
-                _totalFuel = _totalFuel - (t * currentFlowRate);
-
-                //CALCULATE COMBINED MASS OF LANDER AND FUEL
-                totalMass = _landerMass + _totalFuel;
-
-                //CALCULATE CURRENT VELOCITY
-                _velocity = (_velocity) - (t * ((currentThrust / totalMass) - 1.62));
-
-                //CALCULATE CURRENT ALTITUDE
-                _altitude = _altitude - (t * _velocity);
-
-                //IF TOTAL FUEL DROPS BELOW ZERO
-                if (_totalFuel < 0)
-                {
-                    _totalFuel = 0;  //SET TOTAL FUEL TO ZERO
-                    _fuelFlow = 0;   //SET FUEL FLOW RATE TO ZERO
-
-                    Console.WriteLine($"You ran out of fuel and will crash into the planet.");
-                    return true;
-                }
-
-                //IF PLAYER LANDS SUCCESSFULLY
-                if ((_altitude < 0) && (_velocity <= 2))
-                {
-                    _altitude = 0;   //SET ALTITUDE TO ZERO
-                    _fuelFlow = 0;   //SET FUEL FLOW RATE TO ZERO
-
-                    Console.WriteLine($"You've landed successfully!");
-                    return true;
-                }
-
-                //IF PLAYER CRASHES THE LANDER
-                if ((_altitude < 0) && (_velocity > 2))
-                {
-                    _altitude = 0;   //SET ALTITUDE TO ZERO
-                    _fuelFlow = 0;   //SET FUEL FLOW RATE TO ZERO
-
-                    Console.WriteLine($"Your lander has smashed into the planet!");
-                    return true;
-                }
-
+                _totalFuel = 0;
+                _fuelFlow = 0;
+                
+                return LanderState.OutOfFuel;
             }
 
-            return false;  // Still flying- haven't landed or crashed
+            // Player crashed into the planet (was going too fast)
+            if ((_altitude < 0) && (_velocity > 2))
+            {
+                _altitude = 0;
+                _fuelFlow = 0;
+
+                return LanderState.Crashed;
+            }
+
+            // Player landed successfully
+            if ((_altitude < 0) && (_velocity <= 2))
+            {
+                _altitude = 0;
+                _fuelFlow = 0;
+
+                return LanderState.Landed;
+            }
+
+            return LanderState.Flying;  // Still flying- haven't landed or crashed
         }
     }
 }

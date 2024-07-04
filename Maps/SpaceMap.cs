@@ -1,5 +1,6 @@
 ﻿using SpaceGame.Interfaces;
 using SpaceGame.Loggers;
+using SpaceGame.Models;
 
 namespace SpaceGame.Maps
 {

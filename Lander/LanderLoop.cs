@@ -12,17 +12,19 @@ namespace SpaceGame.Lander
 
         private const double MAX_FUEL_FLOW_RATE = 10.0;
 
-        private double fuelFlow;         // Current fuel flow rate
-        private double velocity;         // Current velocity
-        private double altitude;         // Current altitude
-        private double totalFuel;        // Current amount of fuel
-        private double landerMass;       // Mass of lander
-        private double maxFuel;          // Maximum fuel amount
-        private double maxThrust;        // Maximum thrust level
-        private double currentFlowRate;  // Fuel flow rate/max fuel rate
+        private double fuelFlow;            // Current fuel flow rate
+        private double velocity;            // Current velocity
+        private double altitude;            // Current altitude
+        private double totalFuel;           // Current amount of fuel
+        private double landerMass;          // Mass of lander
+        private double maxFuel;             // Maximum fuel amount
+        private double maxThrust;           // Maximum thrust level
+        private double currentFlowRate;     // Fuel flow rate/max fuel rate
+        private double freeFallAcceleration;// The affect planet gravity has on velocity
 
         private Lander? ship;
         private DomainModel _domainModel;
+        private LanderState _landerState = LanderState.None;
 
         public LanderLoop(
             DomainModel domainModel)
@@ -121,8 +123,15 @@ namespace SpaceGame.Lander
                             Console.Write("Please enter an integer or decimal value for fuel flow rate: ");
                         }
 
+                        // Get free-fall acceleration
+                        Console.WriteLine("Enter the value of free-fall acceleration for the planet (Default is 1.62) : ");
+                        while (!double.TryParse(Console.ReadLine(), out freeFallAcceleration))
+                        {
+                            Console.Write("Please enter an integer or decimal value for free-fall acceleration: ");
+                        }
+
                         // Build the lander
-                        ship = new Lander(fuelFlow, velocity, altitude, totalFuel, landerMass, maxFuel, maxThrust);
+                        ship = new Lander(fuelFlow, velocity, altitude, totalFuel, landerMass, maxFuel, maxThrust, freeFallAcceleration);
 
                         ship.DisplayValues();
 
@@ -212,7 +221,9 @@ namespace SpaceGame.Lander
                 Console.Clear();
 
                 // Use the ship configuration to run one landing cycle
-                landOrCrash = ship.RunLandingCycle(currentFlowRate);
+                _landerState = ship.RunLandingCycle(currentFlowRate);
+
+                landOrCrash = ProcessCurrentState();
 
                 ship.ShowAltitude();
                 ship.ShowFuelFlow();
@@ -222,6 +233,33 @@ namespace SpaceGame.Lander
             } while (!landOrCrash); // While lander has not landed or crashed
 
             return landOrCrash;
+        }
+
+        private bool ProcessCurrentState()
+        {
+            bool exitLanderLoop = false;
+
+            switch (_landerState)
+            {
+                case LanderState.Flying:
+                    break;
+                case LanderState.Landed:
+                    Console.WriteLine($"You've landed successfully!");
+                    exitLanderLoop = true;
+                    break;
+                case LanderState.OutOfFuel:
+                    Console.WriteLine($"You ran out of fuel and will crash into the planet.");
+                    exitLanderLoop = true;
+                    break;
+                case LanderState.Crashed:
+                    Console.WriteLine($"Your lander has smashed into the planet!");
+                    exitLanderLoop = true;
+                    break;
+                default:
+                    break;
+            }
+
+            return exitLanderLoop;
         }
 
         private int UserMenu()
