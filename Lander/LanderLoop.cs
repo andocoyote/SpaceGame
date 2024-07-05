@@ -10,17 +10,10 @@ namespace SpaceGame.Lander
         //CS-210-A
         //03-08-01
 
-        private const double MAX_FUEL_FLOW_RATE = 10.0;
+        private const double MAX_FUEL_FLOW_RATE = 20.0;
 
         private double fuelFlowRate;        // Current fuel flow rate
-        private double velocity;            // Current velocity
-        private double altitude;            // Current altitude
-        private double totalFuel;           // Current amount of fuel
-        private double landerMass;          // Mass of lander
-        private double maxFuel;             // Maximum fuel amount
-        private double maxThrust;           // Maximum thrust level
         private double currentFlowRate;     // Fuel flow rate/max fuel rate
-        private double freeFallAcceleration;// The affect planet gravity has on velocity
 
         private Lander? _lander;
         private DomainModel _domainModel;
@@ -36,7 +29,6 @@ namespace SpaceGame.Lander
         {
             int selection;
             bool exit = false;
-            bool landOrCrash = false;
 
             Console.Clear();
             InstructUser();
@@ -47,105 +39,47 @@ namespace SpaceGame.Lander
 
                 switch (selection)
                 {
-                    case 1: // Play using default values
-                        _lander = new Lander();
+                    case 1: 
+                        // If lander is docked at the ship in space, start with default values
+                        if (_domainModel.LanderProperties.LanderState == LanderState.Docked)
+                        {
+                            _lander = new Lander();
+                            _lander.LanderState = LanderState.Landing;
 
-                        _lander.DisplayValues();
+                            _lander.DisplayValues();
 
-                        landOrCrash = Fly();
+                            exit = Fly();
+                        }
+                        // If lander is on a planet, start with previous lander properties from Domain Model
+                        else
+                        {
+                            _lander = new Lander(
+                                _domainModel.LanderProperties.FuelFlowRate,
+                                _domainModel.LanderProperties.Altitude,
+                                _domainModel.LanderProperties.TotalFuel,
+                                _domainModel.LanderProperties.LanderMass,
+                                _domainModel.LanderProperties.MaxFuelRate,
+                                _domainModel.LanderProperties.MaxThrust,
+                                _domainModel.LanderProperties.FreeFallAcceleration,
+                                _domainModel.LanderProperties.LanderState);
 
-                        exit = false;
+                            _lander.LanderState = LanderState.Docking;
+
+                            _lander.DisplayValues();
+
+                            exit = Fly();
+                        }
+
+                        
                         break;
 
-                    case 2: // Get user-defined values for the lander properties
-                        Console.WriteLine("Enter the maximum fuel consumption rate (Default is 10) : ");
-                        while (!double.TryParse(Console.ReadLine(), out maxFuel))
-                        {
-                            Console.Write("Please enter an integer or decimal value for maximum fuel consumption rate: ");
-                        }
-
-                        Console.WriteLine($"Enter your starting throttle rate (0-{maxFuel} only): ");
-                        while (!double.TryParse(Console.ReadLine(), out fuelFlowRate))
-                        {
-                            Console.Write("Please enter an integer or decimal value for fuel flow rate: ");
-                        }
-
-                        // Fuel flow rate cannot be larger than maximum fuel consumption rate
-                        if (fuelFlowRate > maxFuel)
-                        {
-                            Console.WriteLine($"Fuel flow rate must be 0 through {maxFuel}!");
-                            Console.WriteLine($"Setting fuel flow to {maxFuel}");
-                            fuelFlowRate = maxFuel;
-                        }
-
-                        // Fuel flow rate cannot be less then zero
-                        if (fuelFlowRate < 0)
-                        {
-                            Console.WriteLine($"Fuel flow rate must be 0 through {maxFuel}!");
-                            Console.WriteLine($"Setting fuel flow to 0");
-                            fuelFlowRate = 0;
-                        }
-
-                        // Get starting velocity
-                        Console.WriteLine("Enter the current speed of lander (Default is 0 meters per second) : ");
-                        while (!double.TryParse(Console.ReadLine(), out velocity))
-                        {
-                            Console.Write("Please enter an integer or decimal value for velocity: ");
-                        }
-
-                        // Get starting altitude
-                        Console.WriteLine("Enter the altitude of the lander (Default is 1000 meters) : ");
-                        while (!double.TryParse(Console.ReadLine(), out altitude))
-                        {
-                            Console.Write("Please enter an integer or decimal value for altitude: ");
-                        }
-
-                        // Get total amount of fuel on board
-                        Console.WriteLine("Enter the amount of fuel on board (Default is 1700 kgs) : ");
-                        while (!double.TryParse(Console.ReadLine(), out totalFuel))
-                        {
-                            Console.Write("Please enter an integer or decimal value for total fuel: ");
-                        }
-
-                        // Get lander mass
-                        Console.WriteLine("Enter the mass of the lander when all fuel");
-                        Console.WriteLine("has been lost (Default 900 kgs) : ");
-                        while (!double.TryParse(Console.ReadLine(), out landerMass))
-                        {
-                            Console.Write("Please enter an integer or decimal value for lander mass: ");
-                        }
-
-                        // Get max allowed thrust of lander engines
-                        Console.WriteLine("Enter the maximum thrust of the lander's engines (Default is 5000) : ");
-                        while (!double.TryParse(Console.ReadLine(), out maxThrust))
-                        {
-                            Console.Write("Please enter an integer or decimal value for fuel flow rate: ");
-                        }
-
-                        // Get free-fall acceleration
-                        Console.WriteLine("Enter the value of free-fall acceleration for the planet (Default is 1.62) : ");
-                        while (!double.TryParse(Console.ReadLine(), out freeFallAcceleration))
-                        {
-                            Console.Write("Please enter an integer or decimal value for free-fall acceleration: ");
-                        }
-
-                        // Build the lander
-                        _lander = new Lander(fuelFlowRate, velocity, altitude, totalFuel, landerMass, maxFuel, maxThrust, freeFallAcceleration);
-
-                        _lander.DisplayValues();
-
-                        landOrCrash = Fly();
-
-                        exit = false;
-                        break;
-
-                    case 3: // User wants to exit the program
+                    case 2: // User wants to exit the program
                         Console.WriteLine("Exiting lander program.");
                         _domainModel.GameState = GameState.OverPlanet;
                         exit = true;
                         break;
 
-                    case 4: // User wants to display the instructions
+                    case 3: // User wants to display the instructions
                         InstructUser();
                         exit = false;
                         break;
@@ -207,12 +141,22 @@ namespace SpaceGame.Lander
 
                 Console.Clear();
 
-                // Use the ship configuration to run one landing cycle
-                _landerState = _lander.RunLandingCycle(currentFlowRate);
+                // Use the ship configuration to run one landing or docking cycle
+                if (_lander.LanderState == LanderState.Landing)
+                {
+                    _landerState = _lander.RunLandingCycle(currentFlowRate);
+                }
+                else if (_lander.LanderState == LanderState.Docking)
+                {
+                    _landerState = _lander.RunDockingCycle(currentFlowRate);
+                }
 
                 landOrCrash = ProcessCurrentState();
 
                 Console.WriteLine($"Your altitude is: {_lander.Altitude}");
+                Console.WriteLine($"Your target altitude is: {_lander.TargetAltitude}");
+                Console.WriteLine($"Your starting altitude was: {_lander.StartingAltitude}");
+                Console.WriteLine($"Your distance from target is: {_lander.DistanceFromTarget}");
                 Console.WriteLine($"The fuel flow rate is: {_lander.FuelFlowRate}");
                 Console.WriteLine($"The total fuel is: {_lander.TotalFuel}");
                 Console.WriteLine($"Your velocity is: {_lander.Velocity}");
@@ -233,14 +177,23 @@ namespace SpaceGame.Lander
                 case LanderState.Landed:
                     Console.WriteLine($"You've landed successfully!");
                     SetDomainModelLanderProperties();
+                    _domainModel.GameState = GameState.OnPlanet;
                     exitLanderLoop = true;
                     break;
                 case LanderState.OutOfFuel:
                     Console.WriteLine($"You ran out of fuel and will crash into the planet.");
+                    _domainModel.GameState = GameState.LanderCrashed;
                     exitLanderLoop = true;
                     break;
                 case LanderState.Crashed:
                     Console.WriteLine($"Your lander has smashed into the planet!");
+                    _domainModel.GameState = GameState.LanderCrashed;
+                    exitLanderLoop = true;
+                    break;
+                case LanderState.Docked:
+                    Console.WriteLine($"You've docked successfully!");
+                    SetDomainModelLanderProperties();
+                    _domainModel.GameState = GameState.OverPlanet;
                     exitLanderLoop = true;
                     break;
                 default:
@@ -274,10 +227,9 @@ namespace SpaceGame.Lander
             int choice;
 
             Console.WriteLine("Please choose from the following options:");
-            Console.WriteLine("1. Start with the default values");
-            Console.WriteLine("2. Enter your own start values");
-            Console.WriteLine("3. Abort the landing");
-            Console.WriteLine("4. Display user instructions");
+            Console.WriteLine("1. Fire-up the lander");
+            Console.WriteLine("2. Abort the operation");
+            Console.WriteLine("3. Display user instructions");
             Console.WriteLine("Enter your choice: ");
 
             while (!int.TryParse(Console.ReadLine(), out choice))
@@ -290,10 +242,18 @@ namespace SpaceGame.Lander
 
         private void InstructUser()
         {
-            Console.WriteLine("You will attempt to land your ship on the planet.");
+            if (_domainModel.GameState == GameState.InitiateLanding)
+            {
+                Console.WriteLine("You will attempt to land your ship on the planet.");
+            }
+            else
+            {
+                Console.WriteLine("You will attempt to dock your lander to the ship.");
+            }
+            
             Console.WriteLine("In order to accomplish this, your velocity");
             Console.WriteLine("when you land must be 2.0 or below.");
-            Console.WriteLine("Be careful- if you descend too fast, it will be impossible to slow down in time.");
+            Console.WriteLine("Be careful- if your velocity is too high, it will be impossible to slow down in time.");
         }
     }
 }

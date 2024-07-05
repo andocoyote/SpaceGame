@@ -6,8 +6,8 @@ using SpaceGame.Loggers;
 using SpaceGame.Maps;
 using SpaceGame.Models;
 using SpaceGame.Navigation;
+using SpaceGame.Planet;
 using SpaceGame.Space;
-using SpaceGame.Vehicle;
 
 namespace SpaceGame
 {
@@ -22,7 +22,7 @@ namespace SpaceGame
             builder.Services.AddSingleton<INavigation, Navigation.Navigation>();
             builder.Services.AddKeyedSingleton<IScenario, LanderLoop>("Lander");
             builder.Services.AddKeyedSingleton<IScenario, SpaceLoop>("Space");
-            builder.Services.AddKeyedSingleton<IScenario, VehicleLoop>("Vehicle");
+            builder.Services.AddKeyedSingleton<IScenario, PlanetLoop>("Planet");
             builder.Services.AddSingleton<DomainModel>();
             builder.Services.AddSingleton<GameLoop.GameLoop>();
 

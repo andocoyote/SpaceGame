@@ -8,6 +8,7 @@
         OverPlanet = 3,
         InitiateLanding = 4,
         OnPlanet = 5,
-        InFight = 6
+        InFight = 6,
+        LanderCrashed = 7
     }
 }

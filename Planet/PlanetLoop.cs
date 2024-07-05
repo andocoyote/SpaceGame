@@ -1,18 +1,13 @@
 ﻿using SpaceGame.Interfaces;
 using SpaceGame.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SpaceGame.Vehicle
+namespace SpaceGame.Planet
 {
-    internal class VehicleLoop : IScenario
+    internal class PlanetLoop : IScenario
     {
         private DomainModel _domainModel;
 
-        public VehicleLoop(
+        public PlanetLoop(
             DomainModel domainModel)
         {
             _domainModel = domainModel;

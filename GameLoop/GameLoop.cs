@@ -59,6 +59,16 @@ namespace SpaceGame.GameLoop
                         _domainModel = _spaceLoop.Run();
                         break;
 
+                    case GameState.OnPlanet:
+                        // TODO: run the Planet/Vehicle scenario insted of _landerLoop.Run
+                        _domainModel = _landerLoop.Run();
+                        break;
+
+                    case GameState.LanderCrashed:
+                        Console.WriteLine("You've crashed the lander.");
+                        runGameLoop = false;
+                        break;
+
                     case GameState.ExitGame:
                         runGameLoop = false;
                         break;
