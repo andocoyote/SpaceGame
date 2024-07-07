@@ -114,7 +114,8 @@ namespace SpaceGame.Lander
             Altitude = Altitude - (TIME_MULTIPLIER * Velocity);
 
             // Track how far we have yet to go
-            DistanceFromTarget -= Math.Abs(DistanceFromTarget - Altitude);
+            //DistanceFromTarget -= Math.Abs(DistanceFromTarget - Altitude);
+            DistanceFromTarget = Altitude - TargetAltitude;
 
             // Fuel has fallen below zero
             if (TotalFuel < 0)

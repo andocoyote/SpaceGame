@@ -12,20 +12,20 @@ namespace SpaceGame.GameLoop
     {
         private IScenario _spaceLoop;
         private IScenario _landerLoop;
-        private IScenario _vehicleLoop;
+        private IScenario _planetLoop;
         private ILogger _logger;
         private DomainModel _domainModel;
 
         public GameLoop(
             [FromKeyedServices("Space")] IScenario spaceLoop,
             [FromKeyedServices("Lander")] IScenario landerLoop,
-            [FromKeyedServices("Vehicle")] IScenario vehicleloop,
+            [FromKeyedServices("Planet")] IScenario planetloop,
             DomainModel domainModel,
             ILogger logger)
         {
             _spaceLoop = spaceLoop;
             _landerLoop = landerLoop;
-            _vehicleLoop = vehicleloop;
+            _planetLoop = planetloop;
             _domainModel = domainModel;
             _logger = logger;
         }

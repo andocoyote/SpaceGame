@@ -20,6 +20,7 @@ namespace SpaceGame
             builder.Services.AddSingleton<ILogger, ConsoleLogger>();
             builder.Services.AddSingleton<IMap, SpaceMap>();
             builder.Services.AddSingleton<INavigation, Navigation.Navigation>();
+            builder.Services.AddSingleton<ILanderAnimation, LanderAnimation>();
             builder.Services.AddKeyedSingleton<IScenario, LanderLoop>("Lander");
             builder.Services.AddKeyedSingleton<IScenario, SpaceLoop>("Space");
             builder.Services.AddKeyedSingleton<IScenario, PlanetLoop>("Planet");
@@ -27,6 +28,10 @@ namespace SpaceGame
             builder.Services.AddSingleton<GameLoop.GameLoop>();
 
             using IHost host = builder.Build();
+
+            //ILanderAnimation animation = host.Services.GetRequiredService<ILanderAnimation>();
+            //animation.Build();
+            //animation.Display();
 
             // Run the game
             GameLoop.GameLoop gameLoop = host.Services.GetRequiredService<GameLoop.GameLoop>();

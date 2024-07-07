@@ -17,12 +17,15 @@ namespace SpaceGame.Lander
 
         private Lander? _lander;
         private DomainModel _domainModel;
+        private ILanderAnimation _landerAnimation;
         private LanderState _landerState = LanderState.None;
 
         public LanderLoop(
-            DomainModel domainModel)
+            DomainModel domainModel,
+            ILanderAnimation landerAnimation)
         {
             _domainModel = domainModel;
+            _landerAnimation = landerAnimation;
         }
 
         public DomainModel Run()
@@ -69,7 +72,6 @@ namespace SpaceGame.Lander
 
                             exit = Fly();
                         }
-
                         
                         break;
 
@@ -151,6 +153,8 @@ namespace SpaceGame.Lander
                     _landerState = _lander.RunDockingCycle(currentFlowRate);
                 }
 
+                UpdateLanderAnimation();
+                _landerAnimation.Display();
                 landOrCrash = ProcessCurrentState();
 
                 Console.WriteLine($"Your altitude is: {_lander.Altitude}");
@@ -201,6 +205,25 @@ namespace SpaceGame.Lander
             }
 
             return exitLanderLoop;
+        }
+
+        private void UpdateLanderAnimation()
+        {
+            if (_lander == null) return;
+            if (_landerAnimation == null) return;
+
+            // Calculate the row to which to move
+            double totalDistance = Math.Abs(_lander.StartingAltitude - _lander.TargetAltitude);
+            int metersPerRow = (int)(totalDistance / _landerAnimation.RowCount);
+            int row = (int)(_lander.DistanceFromTarget / metersPerRow);
+
+            if (_lander.LanderState == LanderState.Landing)
+            {
+                row = Math.Abs(row - _landerAnimation.RowCount) - 1;
+            }
+
+            // Move the lander
+            _landerAnimation.MoveToRow(row);
         }
 
         // Keep track of the current lander properties for use in the Domain Model
