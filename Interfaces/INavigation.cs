@@ -1,6 +1,6 @@
 ﻿using SpaceGame.Models;
 
-namespace SpaceGame.Navigation
+namespace SpaceGame.Interfaces
 {
     internal interface INavigation
     {

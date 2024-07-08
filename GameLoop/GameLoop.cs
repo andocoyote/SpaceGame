@@ -10,16 +10,16 @@ namespace SpaceGame.GameLoop
 {
     internal class GameLoop
     {
-        private IScenario _spaceLoop;
-        private IScenario _landerLoop;
-        private IScenario _planetLoop;
+        private IScenario? _spaceLoop;
+        private IScenario? _landerLoop;
+        private IScenario? _planetLoop;
         private ILogger _logger;
         private DomainModel _domainModel;
 
         public GameLoop(
-            [FromKeyedServices("Space")] IScenario spaceLoop,
-            [FromKeyedServices("Lander")] IScenario landerLoop,
-            [FromKeyedServices("Planet")] IScenario planetloop,
+            IScenario? spaceLoop,
+            [FromKeyedServices("Lander")] IScenario? landerLoop,
+            IScenario? planetloop,
             DomainModel domainModel,
             ILogger logger)
         {
@@ -32,6 +32,13 @@ namespace SpaceGame.GameLoop
 
         public void Run()
         {
+            if (_spaceLoop == null ||
+                _landerLoop == null ||
+                _planetLoop == null)
+            {
+                return;
+            }
+
             _domainModel.GameState = GameState.EmtpySpace;
             bool runGameLoop = true;
 
@@ -51,17 +58,24 @@ namespace SpaceGame.GameLoop
                         _domainModel = _spaceLoop.Run();
                         break;
 
-                    case GameState.InitiateLanding:
-                        _domainModel = _landerLoop.Run();
-                        break;
-
                     case GameState.OverPlanet:
                         _domainModel = _spaceLoop.Run();
                         break;
 
-                    case GameState.OnPlanet:
-                        // TODO: run the Planet/Vehicle scenario insted of _landerLoop.Run
+                    case GameState.InitiateLanding:
                         _domainModel = _landerLoop.Run();
+                        break;
+
+                    case GameState.InitiateDocking:
+                        _domainModel = _landerLoop.Run();
+                        break;
+
+                    case GameState.OnLandingZone:
+                        _domainModel = _planetLoop.Run();
+                        break;
+
+                    case GameState.EmtpyLand:
+                        _domainModel = _planetLoop.Run();
                         break;
 
                     case GameState.LanderCrashed:

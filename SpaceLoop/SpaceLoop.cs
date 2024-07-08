@@ -1,7 +1,6 @@
 ﻿using SpaceGame.Interfaces;
 using SpaceGame.Loggers;
 using SpaceGame.Models;
-using SpaceGame.Navigation;
 
 namespace SpaceGame.Space
 {
@@ -81,7 +80,7 @@ namespace SpaceGame.Space
 
                 case GameState.OverPlanet:
                     _navigation.DisplayMap();
-                    Console.Write("You are over a planet. Want to descend (y/n) :");
+                    Console.Write("You are over a planet. Want to descend? (y/n) :");
                     
                     while (!char.TryParse(Console.ReadLine(), out selection))
                     {

@@ -181,7 +181,7 @@ namespace SpaceGame.Lander
                 case LanderState.Landed:
                     Console.WriteLine($"You've landed successfully!");
                     SetDomainModelLanderProperties();
-                    _domainModel.GameState = GameState.OnPlanet;
+                    _domainModel.GameState = GameState.OnLandingZone;
                     exitLanderLoop = true;
                     break;
                 case LanderState.OutOfFuel:

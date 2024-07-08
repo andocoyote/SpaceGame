@@ -7,8 +7,12 @@
         EmtpySpace = 2,
         OverPlanet = 3,
         InitiateLanding = 4,
-        OnPlanet = 5,
-        InFight = 6,
-        LanderCrashed = 7
+        OnLandingZone = 5,
+        InitiateDocking = 6,
+        InFight = 7,
+        LanderCrashed = 8,
+        EmtpyLand = 9,
+        OverItem = 10,
+        InspectItem = 11
     }
 }

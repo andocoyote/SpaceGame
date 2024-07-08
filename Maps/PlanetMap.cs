@@ -1,30 +1,38 @@
-﻿using SpaceGame.Interfaces;
+﻿using SpaceGame.BaseClasses;
+using SpaceGame.Loggers;
 using SpaceGame.Models;
 
 namespace SpaceGame.Maps
 {
-    internal class PlanetMap : IMap
+    internal class PlanetMap : ObjectMap
     {
-        public PlanetMap()
-        {
+        public string GetMapType() => "PlanetMap";
 
+        public PlanetMap(ILogger logger) : base(logger)
+        {
+            _playerCharacter = '#';
         }
 
-        public (int, int) Position { get; set; }
-
-        public void Build(int height, int width)
+        public override GameState GetState()
         {
+            GameState state = GameState.None;
 
-        }
+            switch (_charBehindPlayer)
+            {
+                case _vacantSpaceCharacter:
+                    state = GameState.EmtpyLand;
+                    break;
 
-        public void Display()
-        {
+                case _objectCharacter:
+                    state = GameState.OnLandingZone;
+                    break;
 
-        }
+                default:
+                    state = GameState.None;
+                    break;
+            }
 
-        public GameState GetState()
-        {
-            return GameState.None;
+            return state;
         }
     }
 }
