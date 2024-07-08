@@ -10,7 +10,7 @@ namespace SpaceGame.Lander
         //CS-210-A
         //03-08-01
 
-        private const double MAX_FUEL_FLOW_RATE = 20.0;
+        private const double MAX_FUEL_FLOW_RATE = 10.0;
 
         private double fuelFlowRate;        // Current fuel flow rate
         private double currentFlowRate;     // Fuel flow rate/max fuel rate
@@ -96,6 +96,8 @@ namespace SpaceGame.Lander
             return _domainModel;
         }
 
+        // Use the Lander properties to calculate the motion of the lander
+        // Run the LanderAnimation and move the player charactor
         private bool Fly()
         {
             bool landOrCrash = false;

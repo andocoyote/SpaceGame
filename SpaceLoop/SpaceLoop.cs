@@ -20,6 +20,7 @@ namespace SpaceGame.Space
             _logger = logger;
         }
 
+        // Move the player around the space map and update the display as the user moves
         public DomainModel Run()
         {
             bool runSpaceLoop = ProcessCurrentState();

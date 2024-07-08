@@ -20,6 +20,7 @@ namespace SpaceGame.Planet
             _logger = logger;
         }
 
+        // Move the player around the planet map and update the display as the user moves
         public DomainModel Run()
         {
             bool runPlanetLoop = ProcessCurrentState();

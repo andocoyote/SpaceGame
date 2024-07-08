@@ -8,6 +8,7 @@ namespace SpaceGame.BaseClasses
     {
         private ILogger _logger;
 
+        // Specify the min/max distances beween objects on the map
         protected const int MIN_OJBECT_DISTANCE = 20;
         protected const int MAX_OJBECT_DISTANCE = 50;
         protected char _playerCharacter = '%';
@@ -47,6 +48,7 @@ namespace SpaceGame.BaseClasses
             _logger = logger;
         }
 
+        // Create the map matrix with randomly placed objects as specified
         public void Build(int height, int width)
         {
             Random rand = new Random();

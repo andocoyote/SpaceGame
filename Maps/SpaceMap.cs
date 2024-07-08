@@ -13,6 +13,8 @@ namespace SpaceGame.Maps
             ;
         }
 
+        // ScenarioLoop calls Navigation to move around which uses the appropriate map to update the map
+        // Calcute Game State so Navigation knows what scenario to call next
         public override GameState GetState()
         {
             GameState state = GameState.None;

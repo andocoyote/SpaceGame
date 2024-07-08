@@ -8,7 +8,6 @@ using SpaceGame.Models;
 using SpaceGame.Navigation;
 using SpaceGame.Planet;
 using SpaceGame.Space;
-using System.Globalization;
 
 namespace SpaceGame
 {
@@ -18,14 +17,17 @@ namespace SpaceGame
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-            builder.Services.AddSingleton<ILogger, ConsoleLogger>();
+            // Maps and animation
             builder.Services.AddKeyedSingleton<IMap, SpaceMap>("Space");
             builder.Services.AddKeyedSingleton<IMap, PlanetMap>("Planet");
-            builder.Services.AddSingleton<INavigation, Navigation.Navigation>();
             builder.Services.AddSingleton<ILanderAnimation, LanderAnimation>();
-            builder.Services.AddKeyedSingleton<IScenario, LanderLoop>("Lander");
-            builder.Services.AddSingleton<DomainModel>();
+
+            // Navigation
             builder.Services.AddTransient<NavigationFactory>();
+            builder.Services.AddSingleton<INavigation, Navigation.Navigation>();;
+
+            // Scenarios
+            builder.Services.AddKeyedSingleton<IScenario, LanderLoop>("Lander");
 
             // Since SpaceMap implements IMap, have to create the Navigation
             // instance with SpaceMap explicitly passed to the constructor
@@ -51,6 +53,13 @@ namespace SpaceGame
                 return new PlanetLoop(navigation, domainModel, logger);
             });
 
+            // Models
+            builder.Services.AddSingleton<DomainModel>();
+
+            // Loggers
+            builder.Services.AddSingleton<ILogger, ConsoleLogger>();
+
+            // Game Loop
             // Have to request SpaceLoop and PlanetLoop since the both implement IScenario
             builder.Services.AddSingleton<GameLoop.GameLoop>(sp =>
             {

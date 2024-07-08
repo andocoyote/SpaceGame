@@ -3,11 +3,10 @@ using SpaceGame.Art;
 using SpaceGame.Interfaces;
 using SpaceGame.Loggers;
 using SpaceGame.Models;
-using SpaceGame.Navigation;
-using SpaceGame.Space;
 
 namespace SpaceGame.GameLoop
 {
+    // Main Game Loop object
     internal class GameLoop
     {
         private IScenario? _spaceLoop;
@@ -16,6 +15,7 @@ namespace SpaceGame.GameLoop
         private ILogger _logger;
         private DomainModel _domainModel;
 
+        // GameLoop will run scenarios based on properties stored in the DomainModel
         public GameLoop(
             IScenario? spaceLoop,
             [FromKeyedServices("Lander")] IScenario? landerLoop,
@@ -30,6 +30,7 @@ namespace SpaceGame.GameLoop
             _logger = logger;
         }
 
+        // Run a scenario for the Domain Model State property
         public void Run()
         {
             if (_spaceLoop == null ||
