@@ -1,6 +1,7 @@
 ﻿using SpaceGame.Interfaces;
 using SpaceGame.Loggers;
 using SpaceGame.Models;
+using System.Text;
 
 namespace SpaceGame.BaseClasses
 {
@@ -15,16 +16,15 @@ namespace SpaceGame.BaseClasses
         protected const char _objectCharacter = '*';
         protected const char _vacantSpaceCharacter = ' ';
 
-        protected int _width = 0;
-        protected int _height = 0;
+        protected int _width = 50;
+        protected int _height = 100;
         protected char _charBehindPlayer = '\0';
         protected char[,]? _map = null;
-
         protected (int, int) _playerPosition;
         public (int, int) Position
         {
             get => _playerPosition;
-            set
+            private set
             {
                 if (_map != null)
                 {
@@ -42,6 +42,9 @@ namespace SpaceGame.BaseClasses
                 }
             }
         }
+
+        public MapObject? ObjectAtPosition { get; private set; }
+        public Dictionary<string, MapObject> ObjectDictionary { get; } = new Dictionary<string, MapObject>();
 
         public ObjectMap(ILogger logger)
         {
@@ -63,6 +66,7 @@ namespace SpaceGame.BaseClasses
             for (int i = 0; i < _height; i++)
             {
                 int starIndex = rand.Next(MAX_OJBECT_DISTANCE);
+                string name = string.Empty;
 
                 for (int j = 0; j < _width; j++)
                 {
@@ -72,7 +76,16 @@ namespace SpaceGame.BaseClasses
 
                     if (j == starIndex)
                     {
-                        _logger.DebugPrintLine($"Placing object at [{i}, {j}]");
+                        name = DetermineObjectName(i, j);
+                        MapObject mapObject = new MapObject(
+                            name,
+                            MapObjectType.Planet,
+                            label: $"Planet {name}",
+                            description: "An ordinary planet");
+
+                        ObjectDictionary.Add(name, mapObject);
+
+                        _logger.DebugPrintLine($"Placing object {name} at [{i}, {j}]");
                         _map[i, j] = _objectCharacter;
                         starIndex = j + rand.Next(MIN_OJBECT_DISTANCE, MAX_OJBECT_DISTANCE);
                     }
@@ -103,6 +116,58 @@ namespace SpaceGame.BaseClasses
                 }
                 Console.WriteLine();
             }
+
+            foreach (MapObject mapObject in ObjectDictionary.Values)
+            {
+                _logger.DebugPrintLine($"MapObject: {mapObject.Label}");
+            }
+        }
+
+        public void SetPlayerPosition((int, int) currentPlayerPosition)
+        {
+            Position = currentPlayerPosition;
+
+            MapObject? mapObject;
+
+            // Determine what the object name would be if there's an object there
+            string label = DetermineObjectName(Position.Item1, Position.Item2);
+
+            // See if the dictionary contains an object with that name (if so, there's an object there)
+            ObjectDictionary.TryGetValue(label, out mapObject);
+            ObjectAtPosition = mapObject;
+        }
+
+        private string DetermineObjectName(int row, int column)
+        {
+            StringBuilder objectName = new StringBuilder();
+
+            // Either quadrant A or B
+            if (row < _height/2)
+            {
+                if (column < _width/2)
+                {
+                    objectName.Append('A');
+                }
+                else
+                {
+                    objectName.Append('B');
+                }
+            }
+            // Either quadrant C or D
+            else
+            {
+                if (column < _width/2)
+                {
+                    objectName.Append('C');
+                }
+                else
+                {
+                    objectName.Append('D');
+                }
+            }
+
+            objectName.Append("-" + row + "-" + column);
+            return objectName.ToString();
         }
 
         // Calcute Game State so Navigation knows what scenario to call next

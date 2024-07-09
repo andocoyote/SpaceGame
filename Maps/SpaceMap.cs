@@ -19,19 +19,26 @@ namespace SpaceGame.Maps
         {
             GameState state = GameState.None;
 
-            switch (_charBehindPlayer)
+            if (ObjectAtPosition == null)
             {
-                case _vacantSpaceCharacter:
-                    state = GameState.EmtpySpace;
-                    break;
+                state = GameState.EmtpySpace;
+            }
+            else
+            {
+                switch (ObjectAtPosition.Type)
+                {
+                    case MapObjectType.Planet:
+                        state = GameState.OverPlanet;
+                        break;
 
-                case _objectCharacter:
-                    state = GameState.OverPlanet;
-                    break;
+                    case MapObjectType.HomePlanet:
+                        state = GameState.OverHomePlanet;
+                        break;
 
-                default:
-                    state = GameState.None;
-                    break;
+                    default:
+                        state = GameState.None;
+                        break;
+                }
             }
 
             return state;

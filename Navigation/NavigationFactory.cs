@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SpaceGame.Interfaces;
+using SpaceGame.Models;
 
 namespace SpaceGame.Navigation
 {
@@ -18,8 +19,12 @@ namespace SpaceGame.Navigation
         {
             return mapType switch
             {
-                "SpaceMap" => new Navigation(_serviceProvider.GetKeyedService<IMap>("Space")),
-                "PlanetMap" => new Navigation(_serviceProvider.GetKeyedService<IMap>("Planet")),
+                "SpaceMap" => new Navigation(
+                    _serviceProvider.GetKeyedService<IMap>("Space"),
+                    _serviceProvider.GetService<DomainModel>()),
+                "PlanetMap" => new Navigation(
+                    _serviceProvider.GetKeyedService<IMap>("Planet"),
+                    _serviceProvider.GetService<DomainModel>()),
                 _ => throw new ArgumentException($"Unknown map type: {mapType}")
             };
         }
