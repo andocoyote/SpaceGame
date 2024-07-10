@@ -81,7 +81,7 @@ namespace SpaceGame.Space
 
                 case GameState.OverPlanet:
                     _navigation.DisplayMap();
-                    Console.Write($"You are over planet {_domainModel?.MapObject?.Label}. Want to descend? (y/n) :");
+                    Console.Write($"You are over {_domainModel?.MapObject?.Label}. Want to descend? (y/n) :");
                     
                     while (!char.TryParse(Console.ReadLine(), out selection))
                     {
@@ -98,6 +98,28 @@ namespace SpaceGame.Space
                         continueScenario = false;
                     }
                     
+                    break;
+
+                case GameState.OverHomePlanet:
+                    _navigation.DisplayMap();
+                    Console.Write($"You are over {_domainModel?.MapObject?.Label}. Want to descend? (y/n) :");
+
+                    while (!char.TryParse(Console.ReadLine(), out selection))
+                    {
+
+                    }
+
+                    if (selection == 'y')
+                    {
+                        Console.WriteLine("TODO: Refuel, etc. on home planet.");
+                        /*if (_domainModel != null)
+                        {
+                            _domainModel.GameState = GameState.InitiateLanding;
+                        }
+
+                        continueScenario = false;*/
+                    }
+
                     break;
 
                 default:

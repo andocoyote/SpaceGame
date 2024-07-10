@@ -24,9 +24,8 @@ namespace SpaceGame.Navigation
             // Build the map and assign the player to a random location on the map
             if (_map != null)
             {
-                _currentPlayerPosition = (rand.Next(_mapHeight - 1), rand.Next(_mapWidth - 1));
                 _map.Build(_mapHeight, _mapWidth);
-                _map.SetPlayerPosition(_currentPlayerPosition);
+                _currentPlayerPosition = _map.Position;
             }
         }
 
@@ -43,6 +42,7 @@ namespace SpaceGame.Navigation
             _map.SetPlayerPosition(_currentPlayerPosition);
             _domainModel.MapObject = _map.ObjectAtPosition;
 
+            // Ask the map what kind of object is at the player's position
             GameState state = _map.GetState();
             return state;
         }
@@ -60,6 +60,7 @@ namespace SpaceGame.Navigation
             _map.SetPlayerPosition(_currentPlayerPosition);
             _domainModel.MapObject = _map.ObjectAtPosition;
 
+            // Ask the map what kind of object is at the player's position
             GameState state = _map.GetState();
             return state;
         }
@@ -77,6 +78,7 @@ namespace SpaceGame.Navigation
             _map.SetPlayerPosition(_currentPlayerPosition);
             _domainModel.MapObject = _map.ObjectAtPosition;
 
+            // Ask the map what kind of object is at the player's position
             GameState state = _map.GetState();
             return state;
         }
@@ -94,6 +96,7 @@ namespace SpaceGame.Navigation
             _map.SetPlayerPosition(_currentPlayerPosition);
             _domainModel.MapObject = _map.ObjectAtPosition;
 
+            // Ask the map what kind of object is at the player's position
             GameState state = _map.GetState();
             return state;
         }

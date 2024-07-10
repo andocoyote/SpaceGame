@@ -12,9 +12,15 @@ namespace SpaceGame.BaseClasses
         // Specify the min/max distances beween objects on the map
         protected const int MIN_OJBECT_DISTANCE = 20;
         protected const int MAX_OJBECT_DISTANCE = 50;
+
+        protected MapObjectType _mapObjectType = MapObjectType.None;
+        protected MapObjectType _homePositionObjectType = MapObjectType.None;
+        protected char _vacantSpaceCharacter = ' ';
         protected char _playerCharacter = '%';
-        protected const char _objectCharacter = '*';
-        protected const char _vacantSpaceCharacter = ' ';
+        protected char _objectCharacter = '*';
+        protected string _objectDescription = "An ordinary object";
+        protected char _startPositionCharacter = '@';
+        protected string _homePositionDescription = "StartPosition";
 
         protected int _width = 50;
         protected int _height = 100;
@@ -59,6 +65,8 @@ namespace SpaceGame.BaseClasses
             _width = width;
             _height = height;
             _map = new char[height, width];
+            string objectName = string.Empty;
+            MapObject mapObject;
 
             // Populate the map with random objects:
             //  For each row, place objects at random intervals but not less than 2 spaces between them in any direction
@@ -66,7 +74,7 @@ namespace SpaceGame.BaseClasses
             for (int i = 0; i < _height; i++)
             {
                 int starIndex = rand.Next(MAX_OJBECT_DISTANCE);
-                string name = string.Empty;
+                objectName = string.Empty;
 
                 for (int j = 0; j < _width; j++)
                 {
@@ -76,16 +84,17 @@ namespace SpaceGame.BaseClasses
 
                     if (j == starIndex)
                     {
-                        name = DetermineObjectName(i, j);
-                        MapObject mapObject = new MapObject(
-                            name,
-                            MapObjectType.Planet,
-                            label: $"Planet {name}",
-                            description: "An ordinary planet");
+                        objectName = DetermineObjectName(i, j);
+                        mapObject = new MapObject(
+                            objectName,
+                            _mapObjectType,
+                            label: $"{_mapObjectType} {objectName}",
+                            description: _objectDescription,
+                            isStartPosition: false);
 
-                        ObjectDictionary.Add(name, mapObject);
+                        ObjectDictionary.Add(objectName, mapObject);
 
-                        _logger.DebugPrintLine($"Placing object {name} at [{i}, {j}]");
+                        _logger.DebugPrintLine($"Placing object {objectName} at [{i}, {j}]");
                         _map[i, j] = _objectCharacter;
                         starIndex = j + rand.Next(MIN_OJBECT_DISTANCE, MAX_OJBECT_DISTANCE);
                     }
@@ -95,6 +104,34 @@ namespace SpaceGame.BaseClasses
                     }
                 }
             }
+
+            // Add the 'StartPosition', e.g. home planet, landing zone, etc.
+            int homeRow = rand.Next(_height);
+            int homeColumn = rand.Next(_width);
+            objectName = DetermineObjectName(homeRow, homeColumn);
+            mapObject = new MapObject(
+                objectName,
+                _mapObjectType,
+                label: $"{_mapObjectType} {objectName}",
+                description: _homePositionDescription,
+                isStartPosition: true);
+
+            bool alreadyExists = ObjectDictionary.TryAdd(objectName, mapObject);
+
+            // If there's already an item located at this location, turn it into the 'StartPosition' item instead
+            if (alreadyExists)
+            {
+                ObjectDictionary[objectName].Label = $"{_homePositionObjectType} {objectName}";
+                ObjectDictionary[objectName].Type = _homePositionObjectType;
+                ObjectDictionary[objectName].Description = _homePositionDescription;
+                ObjectDictionary[objectName].IsStartPosition = true;
+            }
+
+            // Add the position on the map
+            _map[homeRow, homeColumn] = _startPositionCharacter;
+
+            // Add the player character to the start position
+            SetPlayerPosition((homeRow, homeColumn));
         }
 
         public void Display()

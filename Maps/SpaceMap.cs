@@ -10,7 +10,13 @@ namespace SpaceGame.Maps
 
         public SpaceMap(ILogger logger) : base(logger)
         {
-            ;
+            _mapObjectType = MapObjectType.Planet;
+            _homePositionObjectType = MapObjectType.HomePlanet;
+            _playerCharacter = '%';
+            _objectCharacter = '*';
+            _objectDescription = "An ordinary planet";
+            _startPositionCharacter = '@';
+            _homePositionDescription = "Home Planet";
         }
 
         // ScenarioLoop calls Navigation to move around which uses the appropriate map to update the map

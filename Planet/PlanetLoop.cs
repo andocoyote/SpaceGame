@@ -91,6 +91,27 @@ namespace SpaceGame.Planet
 
                     break;
 
+                case GameState.OverItem:
+                    _navigation.DisplayMap();
+                    Console.Write($"You are at {_domainModel?.MapObject?.Label}. Want to investigate? (y/n) :");
+
+                    while (!char.TryParse(Console.ReadLine(), out selection))
+                    {
+
+                    }
+
+                    if (selection == 'y')
+                    {
+                        Console.WriteLine("TODO: Investigate item.");
+                        /*if (_domainModel != null)
+                        {
+                            _domainModel.GameState = GameState.InitiateDocking;
+                            continueScenario = false;
+                        }*/
+                    }
+
+                    break;
+
                 default:
                     break;
             }

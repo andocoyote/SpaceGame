@@ -10,7 +10,13 @@ namespace SpaceGame.Maps
 
         public PlanetMap(ILogger logger) : base(logger)
         {
+            _mapObjectType = MapObjectType.Mountain;
+            _homePositionObjectType = MapObjectType.LandingZone;
             _playerCharacter = '#';
+            _objectCharacter = '^';
+            _objectDescription = "An ordinary mountain";
+            _startPositionCharacter = '@';
+            _homePositionDescription = "Landing Zone";
         }
 
         // ScenarioLoop calls Navigation to move around which uses the appropriate map to update the map
@@ -19,19 +25,26 @@ namespace SpaceGame.Maps
         {
             GameState state = GameState.None;
 
-            switch (_charBehindPlayer)
+            if (ObjectAtPosition == null)
             {
-                case _vacantSpaceCharacter:
-                    state = GameState.EmtpyLand;
-                    break;
+                state = GameState.EmtpyLand;
+            }
+            else
+            {
+                switch (ObjectAtPosition.Type)
+                {
+                    case MapObjectType.Mountain:
+                        state = GameState.OverItem;
+                        break;
 
-                case _objectCharacter:
-                    state = GameState.OnLandingZone;
-                    break;
+                    case MapObjectType.LandingZone:
+                        state = GameState.OnLandingZone;
+                        break;
 
-                default:
-                    state = GameState.None;
-                    break;
+                    default:
+                        state = GameState.None;
+                        break;
+                }
             }
 
             return state;
