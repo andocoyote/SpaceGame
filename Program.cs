@@ -7,6 +7,7 @@ using SpaceGame.Maps;
 using SpaceGame.Models;
 using SpaceGame.Navigation;
 using SpaceGame.Planet;
+using SpaceGame.Screen;
 using SpaceGame.Space;
 
 namespace SpaceGame
@@ -17,10 +18,11 @@ namespace SpaceGame
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-            // Maps and animation
+            // Maps, animation, and screen
             builder.Services.AddKeyedSingleton<IMap, SpaceMap>("Space");
             builder.Services.AddKeyedSingleton<IMap, PlanetMap>("Planet");
             builder.Services.AddSingleton<ILanderAnimation, LanderAnimation>();
+            builder.Services.AddTransient<IScreen, Screen.Screen>();    // Transient because we need one per map
 
             // Navigation
             builder.Services.AddTransient<NavigationFactory>();

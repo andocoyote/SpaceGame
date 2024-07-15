@@ -1,6 +1,7 @@
 ﻿using SpaceGame.BaseClasses;
 using SpaceGame.Loggers;
 using SpaceGame.Models;
+using SpaceGame.Screen;
 
 namespace SpaceGame.Maps
 {
@@ -8,7 +9,9 @@ namespace SpaceGame.Maps
     {
         public string GetMapType() => "PlanetMap";
 
-        public PlanetMap(ILogger logger) : base(logger)
+        public PlanetMap(
+            IScreen screen,
+            ILogger logger) : base(screen, logger)
         {
             _mapObjectType = MapObjectType.Mountain;
             _homePositionObjectType = MapObjectType.LandingZone;

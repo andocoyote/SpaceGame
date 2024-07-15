@@ -1,13 +1,15 @@
 ﻿using SpaceGame.Interfaces;
 using SpaceGame.Loggers;
 using SpaceGame.Models;
+using SpaceGame.Screen;
 using System.Text;
 
 namespace SpaceGame.BaseClasses
 {
     internal abstract class ObjectMap : IMap
     {
-        private ILogger _logger;
+        protected IScreen _screen;
+        protected ILogger _logger;
 
         // Specify the min/max distances beween objects on the map
         protected const int MIN_OJBECT_DISTANCE = 20;
@@ -22,9 +24,9 @@ namespace SpaceGame.BaseClasses
         protected char _startPositionCharacter = '@';
         protected string _homePositionDescription = "StartPosition";
 
-        protected int _width = 50;
-        protected int _height = 100;
-        protected char _charBehindPlayer = '\0';
+        protected int _height = 0;
+        protected int _width = 0;
+        protected char _charBehindPlayer = ' ';
         protected char[,]? _map = null;
         protected (int, int) _playerPosition;
         public (int, int) Position
@@ -52,8 +54,11 @@ namespace SpaceGame.BaseClasses
         public MapObject? ObjectAtPosition { get; private set; }
         public Dictionary<string, MapObject> ObjectDictionary { get; } = new Dictionary<string, MapObject>();
 
-        public ObjectMap(ILogger logger)
+        public ObjectMap(
+            IScreen screen,
+            ILogger logger)
         {
+            _screen = screen;
             _logger = logger;
         }
 
@@ -84,7 +89,10 @@ namespace SpaceGame.BaseClasses
 
                     if (j == starIndex)
                     {
+                        // Objects are named using their quadrant and x,y coordinates
                         objectName = DetermineObjectName(i, j);
+
+                        // Create the property model of the object on the map and add it to the object dictionary
                         mapObject = new MapObject(
                             objectName,
                             _mapObjectType,
@@ -132,12 +140,14 @@ namespace SpaceGame.BaseClasses
 
             // Add the player character to the start position
             SetPlayerPosition((homeRow, homeColumn));
+
+            // The IScreen implementation will aggregate the UX features and display them when IScreen.Display() is called
+            // Only need pass _map to AddArray() once because IScreen will have a reference to it from then on
+            _screen.AddGraphics(_map);
         }
 
         public void Display()
         {
-            Console.Clear();
-
             if (_map == null)
             {
                 _logger.DebugPrintLine("Map has not been built yet.");
@@ -145,14 +155,8 @@ namespace SpaceGame.BaseClasses
             }
 
             _logger.DebugPrintLine("Map:");
-            for (int i = 0; i < _map.GetLength(0); i++)
-            {
-                for (int j = 0; j < _map.GetLength(1); j++)
-                {
-                    Console.Write($"{_map[i, j]}");
-                }
-                Console.WriteLine();
-            }
+
+            _screen.Display();
 
             foreach (MapObject mapObject in ObjectDictionary.Values)
             {

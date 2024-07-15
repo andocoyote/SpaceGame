@@ -3,6 +3,7 @@
     internal interface ILanderAnimation
     {
         (int, int) Position { get; set; }
+        public string[] AnimationText { get; set; }
         int RowCount { get; }
 
         void Build();

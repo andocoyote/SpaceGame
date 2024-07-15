@@ -26,6 +26,8 @@ namespace SpaceGame.Lander
         {
             _domainModel = domainModel;
             _landerAnimation = landerAnimation;
+
+            _landerAnimation.Build();
         }
 
         public DomainModel Run()
@@ -155,17 +157,33 @@ namespace SpaceGame.Lander
                     _landerState = _lander.RunDockingCycle(currentFlowRate);
                 }
 
+                List<string> landerProperties = new List<string>()
+                {
+                    $"Velocity: {_lander.Velocity}",
+                    $"Altitude: {_lander.Altitude}",
+                    $"Starting Altitude: {_lander.StartingAltitude}",
+                    $"Target Altitude: {_lander.TargetAltitude}",
+                    $"Distance from Target: {_lander.DistanceFromTarget}",
+                    $"Total Fuel: {_lander.TotalFuel}",
+                    $"Fuel Flow Rate: {_lander.FuelFlowRate}"
+                };
+
+                for (int i = 0; i < landerProperties.Count; i++)
+                {
+                    _landerAnimation.AnimationText[i] = landerProperties[i];
+                }
+
                 UpdateLanderAnimation();
                 _landerAnimation.Display();
                 landOrCrash = ProcessCurrentState();
 
+                /*Console.WriteLine($"Your velocity is: {_lander.Velocity}");
                 Console.WriteLine($"Your altitude is: {_lander.Altitude}");
                 Console.WriteLine($"Your target altitude is: {_lander.TargetAltitude}");
                 Console.WriteLine($"Your starting altitude was: {_lander.StartingAltitude}");
                 Console.WriteLine($"Your distance from target is: {_lander.DistanceFromTarget}");
-                Console.WriteLine($"The fuel flow rate is: {_lander.FuelFlowRate}");
                 Console.WriteLine($"The total fuel is: {_lander.TotalFuel}");
-                Console.WriteLine($"Your velocity is: {_lander.Velocity}");
+                Console.WriteLine($"The fuel flow rate is: {_lander.FuelFlowRate}");*/
 
             } while (!landOrCrash); // While lander has not landed or crashed
 
