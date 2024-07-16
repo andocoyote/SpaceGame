@@ -36,6 +36,10 @@ namespace SpaceGame.Lander
             bool exit = false;
 
             Console.Clear();
+
+            UpdateLanderAnimation();
+            _landerAnimation.Display();
+
             InstructUser();
 
             do
@@ -51,9 +55,8 @@ namespace SpaceGame.Lander
                             _lander = new Lander();
                             _lander.LanderState = LanderState.Landing;
 
-                            _lander.DisplayValues();
-
                             exit = Fly();
+                            SetDomainModelLanderProperties();
                         }
                         // If lander is on a planet, start with previous lander properties from Domain Model
                         else
@@ -70,9 +73,8 @@ namespace SpaceGame.Lander
 
                             _lander.LanderState = LanderState.Docking;
 
-                            _lander.DisplayValues();
-
                             exit = Fly();
+                            SetDomainModelLanderProperties();
                         }
                         
                         break;
@@ -165,7 +167,10 @@ namespace SpaceGame.Lander
                     $"Target Altitude: {_lander.TargetAltitude}",
                     $"Distance from Target: {_lander.DistanceFromTarget}",
                     $"Total Fuel: {_lander.TotalFuel}",
-                    $"Fuel Flow Rate: {_lander.FuelFlowRate}"
+                    $"Fuel Flow Rate: {_lander.FuelFlowRate}",
+                    $"Maximum Fuel Consumption Rate: {_lander.MaxFuelRate}",
+                    $"Maximum Engine Thrust: {_lander.MaxThrust}",
+                    $"Lander Mass: {_lander.LanderMass}"
                 };
 
                 for (int i = 0; i < landerProperties.Count; i++)
@@ -176,14 +181,6 @@ namespace SpaceGame.Lander
                 UpdateLanderAnimation();
                 _landerAnimation.Display();
                 landOrCrash = ProcessCurrentState();
-
-                /*Console.WriteLine($"Your velocity is: {_lander.Velocity}");
-                Console.WriteLine($"Your altitude is: {_lander.Altitude}");
-                Console.WriteLine($"Your target altitude is: {_lander.TargetAltitude}");
-                Console.WriteLine($"Your starting altitude was: {_lander.StartingAltitude}");
-                Console.WriteLine($"Your distance from target is: {_lander.DistanceFromTarget}");
-                Console.WriteLine($"The total fuel is: {_lander.TotalFuel}");
-                Console.WriteLine($"The fuel flow rate is: {_lander.FuelFlowRate}");*/
 
             } while (!landOrCrash); // While lander has not landed or crashed
 

@@ -138,7 +138,10 @@ namespace SpaceGame.Lander
             // Player landed successfully
             else if (DistanceFromTarget <= 0 && Velocity <= MAX_COMPLETION_VELOCITY)
             {
+                Velocity = 0;
                 Altitude = 0;
+                StartingAltitude = 0;
+                DistanceFromTarget = 0;
                 FuelFlowRate = 0;
                 _altimeterIsSet = false;
 
@@ -198,10 +201,12 @@ namespace SpaceGame.Lander
             // Player docked successfully
             else if (DistanceFromTarget <= 0 && Velocity <= MAX_COMPLETION_VELOCITY)
             {
+                Velocity = 0;
                 Altitude = 1000;
+                StartingAltitude = 0;
+                DistanceFromTarget = 0;
                 FuelFlowRate = 0;
                 _altimeterIsSet = false;
-
                 this.LanderState = LanderState.Docked;
             }
             // Still flying- haven't landed, docked, or crashed
