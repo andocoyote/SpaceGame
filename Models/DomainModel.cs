@@ -6,6 +6,7 @@ namespace SpaceGame.Models
     {
         public GameState GameState { get; set; }
         public MapObject? MapObject { get; set; }
+        public ShipProperties ShipProperties { get; set; } = new ShipProperties();
         public LanderProperties LanderProperties { get; set; } = new LanderProperties();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SpaceGame.Interfaces;
+using SpaceGame.Lander;
 using SpaceGame.Loggers;
 using SpaceGame.Models;
 
@@ -27,6 +28,23 @@ namespace SpaceGame.Space
 
             while (runSpaceLoop)
             {
+                List<string> shipProperties = new List<string>()
+                {
+                    "Ship Properties:",
+                    $"Total Fuel: {_domainModel.ShipProperties.TotalFuel}",
+                    "Lander Properties:",
+                    $"Total Fuel: {_domainModel.LanderProperties.TotalFuel}",
+                    $"Fuel Flow Rate: {_domainModel.LanderProperties.FuelFlowRate}",
+                    $"Maximum Fuel Consumption Rate: {_domainModel.LanderProperties.MaxFuelRate}",
+                    $"Maximum Engine Thrust: {_domainModel.LanderProperties.MaxThrust}",
+                    $"Lander Mass: {_domainModel.LanderProperties.LanderMass}"
+                };
+
+                for (int i = 0; i < shipProperties.Count; i++)
+                {
+                    //_.AnimationText[i] = landerProperties[i];
+                }
+
                 Console.WriteLine("Use arrow keys to fly (ESC to quit).");
                 var keyInfo = Console.ReadKey(intercept: true); // Read a key without displaying it
 
