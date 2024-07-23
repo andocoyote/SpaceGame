@@ -1,4 +1,5 @@
-﻿using SpaceGame.BaseClasses;
+﻿using Microsoft.Extensions.Options;
+using SpaceGame.BaseClasses;
 using SpaceGame.Loggers;
 using SpaceGame.Models;
 using SpaceGame.Screen;
@@ -11,7 +12,8 @@ namespace SpaceGame.Maps
 
         public PlanetMap(
             IScreen screen,
-            ILogger logger) : base(screen, logger)
+            ILogger logger,
+            IOptions<ScreenOptions> screenOptions) : base(screen, logger, screenOptions)
         {
             _mapObjectType = MapObjectType.Mountain;
             _homePositionObjectType = MapObjectType.LandingZone;

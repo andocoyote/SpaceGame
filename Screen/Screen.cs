@@ -1,27 +1,40 @@
-﻿namespace SpaceGame.Screen
+﻿using Microsoft.Extensions.Options;
+
+namespace SpaceGame.Screen
 {
     internal class Screen : IScreen
     {
         // Height and width of the entire display
-        protected int SCREEN_HEIGHT = 50;
-        protected int SCREEN_WIDTH = 150;
+        protected int SCREEN_HEIGHT;
+        protected int SCREEN_WIDTH;
 
         // Height and width of the array portion (left two-thirds)
-        protected int GRAPHICS_HEIGHT = 50;
-        protected int GRAPHICS_WIDTH = 100;
+        protected int GRAPHICS_HEIGHT;
+        protected int GRAPHICS_WIDTH;
 
         // Height and width of the text portion (right third)
-        protected int TEXT_HEIGHT = 50;
-        protected int TEXT_WIDTH = 50;
+        protected int TEXT_HEIGHT;
+        protected int TEXT_WIDTH;
 
         protected char[,]? _graphics = null;
         protected string[]? _text;
+        protected IOptions<ScreenOptions> _screenOptions;
 
         // TODO: is char[] more efficient to write to console than string for this?
         protected List<char[]> _aggregatedDisplay;
 
-        public Screen()
+        public Screen(
+            IOptions<ScreenOptions> screenOptions)
         {
+            _screenOptions = screenOptions;
+
+            SCREEN_HEIGHT = _screenOptions.Value.ScreenHeight;
+            SCREEN_WIDTH = _screenOptions.Value.ScreenWidth;
+            GRAPHICS_HEIGHT = _screenOptions.Value.GraphicsHeight;
+            GRAPHICS_WIDTH = _screenOptions.Value.GraphicsWidth;
+            TEXT_HEIGHT = _screenOptions.Value.TextHeight;
+            TEXT_WIDTH = _screenOptions.Value.TextWidth;
+
             _aggregatedDisplay = new List<char[]>(SCREEN_HEIGHT);
 
             // Create a char array to store the row characters

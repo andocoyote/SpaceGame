@@ -1,4 +1,5 @@
-﻿using SpaceGame.Interfaces;
+﻿using Microsoft.Extensions.Options;
+using SpaceGame.Interfaces;
 using SpaceGame.Loggers;
 using SpaceGame.Models;
 using SpaceGame.Screen;
@@ -29,6 +30,7 @@ namespace SpaceGame.BaseClasses
         protected char _charBehindPlayer = ' ';
         protected char[,]? _map = null;
         protected (int, int) _playerPosition;
+        protected IOptions<ScreenOptions> _screenOptions;
         public (int, int) Position
         {
             get => _playerPosition;
@@ -56,10 +58,15 @@ namespace SpaceGame.BaseClasses
 
         public ObjectMap(
             IScreen screen,
-            ILogger logger)
+            ILogger logger,
+            IOptions<ScreenOptions> screenOptions)
         {
             _screen = screen;
             _logger = logger;
+            _screenOptions = screenOptions;
+
+            _height = screenOptions.Value.GraphicsHeight;
+            _width = screenOptions.Value.GraphicsWidth;
         }
 
         // Create the map matrix with randomly placed objects as specified

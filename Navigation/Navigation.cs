@@ -1,23 +1,34 @@
-﻿using SpaceGame.BaseClasses;
+﻿using Microsoft.Extensions.Options;
+using SpaceGame.BaseClasses;
 using SpaceGame.Interfaces;
 using SpaceGame.Models;
+using SpaceGame.Screen;
 
 namespace SpaceGame.Navigation
 {
     internal class Navigation : INavigation
     {
         private IMap? _map;
-        private readonly int _mapHeight = 50;
-        private readonly int _mapWidth = 100;
+        private readonly int _mapHeight = 0;
+        private readonly int _mapWidth = 0;
         private (int, int) _currentPlayerPosition = (0, 0);
         private DomainModel? _domainModel;
+        private IOptions<ScreenOptions>? _screenOptions;
 
         public Navigation(
             IMap? map,
-            DomainModel? domainModel)
+            DomainModel? domainModel,
+            IOptions<ScreenOptions>? screenOptions)
         {
             _map = map;
             _domainModel = domainModel;
+            _screenOptions = screenOptions;
+
+            if (_screenOptions != null)
+            {
+                _mapHeight = _screenOptions.Value.GraphicsHeight;
+                _mapWidth = _screenOptions.Value.GraphicsWidth;
+            }
 
             Random rand = new Random();
 

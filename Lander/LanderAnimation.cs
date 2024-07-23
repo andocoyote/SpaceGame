@@ -1,12 +1,13 @@
-﻿using SpaceGame.Models;
+﻿using Microsoft.Extensions.Options;
+using SpaceGame.Models;
 using SpaceGame.Screen;
 
 namespace SpaceGame.Lander
 {
     internal class LanderAnimation : ILanderAnimation
     {
-        private const int ANIMATION_HEIGHT = 50;
-        private const int ANIMATION_WIDTH = 100;
+        private int _animationHeight = 0;
+        private int _animationWidth = 0;
         private const char LANDER_CHARACTER = '^';
         private char _characterBehindLander = ' ';
         private int _landerColumn;
@@ -23,6 +24,7 @@ namespace SpaceGame.Lander
         private char[,]? _animation = null;
         private DomainModel _domainModel;
         private IScreen _screen;
+        protected IOptions<ScreenOptions>? _screenOptions;
 
         public (int, int) Position { get; set; }
         public string[] AnimationText { get; set; } = new string[50];
@@ -30,14 +32,22 @@ namespace SpaceGame.Lander
 
         public LanderAnimation(
             DomainModel domainModel,
-            IScreen screen)
+            IScreen screen,
+            IOptions<ScreenOptions>? screenOptions)
         {
             _domainModel = domainModel;
             _screen = screen;
-            _landerColumn = ANIMATION_WIDTH / 2;
-            RowCount = ANIMATION_HEIGHT;
+            _screenOptions = screenOptions;
 
-            _animation = new char[ANIMATION_HEIGHT, ANIMATION_WIDTH];
+            if (_screenOptions != null)
+            {
+                _animationHeight = _screenOptions.Value.GraphicsHeight;
+                _animationWidth = _screenOptions.Value.GraphicsWidth;
+                _landerColumn = _animationWidth / 2;
+                RowCount = _animationHeight;
+            }
+
+            _animation = new char[_animationHeight, _animationWidth];
         }
         public void Build()
         {
@@ -52,9 +62,9 @@ namespace SpaceGame.Lander
             // Initialize the animation:
             //  All rows except the bottom 5 will be empty space chars.
             //  The bottom 5 are terrain and converted from strings to char[]
-            for (int i = 0; i < ANIMATION_HEIGHT - 5; i++)
+            for (int i = 0; i < _animationHeight - 5; i++)
             {
-                for (int j = 0; j < ANIMATION_WIDTH; j++)
+                for (int j = 0; j < _animationWidth; j++)
                 {
                     _animation[i, j] = ' ';
                 }
@@ -67,7 +77,7 @@ namespace SpaceGame.Lander
                 {
                     // This weird calculation is because I want the terrains listed in the list in the order
                     // I've specified above so I can easily picture and edit the terrain as desired
-                    _animation[ANIMATION_HEIGHT - _terrains.Count + i, j] = _terrains[i][j];
+                    _animation[_animationHeight - _terrains.Count + i, j] = _terrains[i][j];
                 }
             }
 
@@ -78,7 +88,7 @@ namespace SpaceGame.Lander
             }
             else
             {
-                row = ANIMATION_HEIGHT - 1;
+                row = _animationHeight - 1;
             }
 
             MoveToRow(row);
@@ -93,9 +103,9 @@ namespace SpaceGame.Lander
             {
                 row = 0;
             }
-            else if (row >= ANIMATION_WIDTH - 1)
+            else if (row >= _animationWidth - 1)
             {
-                row = ANIMATION_WIDTH - 1;
+                row = _animationWidth - 1;
             }
 
             // Put the character that was behind the lander back

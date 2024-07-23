@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SpaceGame.Interfaces;
 using SpaceGame.Lander;
@@ -17,6 +18,14 @@ namespace SpaceGame
         static async Task Main(string[] args)
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+
+            // Application configuration
+            // https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration
+            // https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration-providers#file-configuration-provider
+            builder.Configuration
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+            builder.Services.Configure<ScreenOptions>(builder.Configuration.GetSection("ScreenOptions"));
 
             // Maps, animation, and screen
             builder.Services.AddKeyedSingleton<IMap, SpaceMap>("Space");
