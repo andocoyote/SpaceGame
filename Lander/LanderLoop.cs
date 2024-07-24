@@ -159,25 +159,7 @@ namespace SpaceGame.Lander
                     _landerState = _lander.RunDockingCycle(currentFlowRate);
                 }
 
-                List<string> landerProperties = new List<string>()
-                {
-                    $"Velocity: {_lander.Velocity}",
-                    $"Altitude: {_lander.Altitude}",
-                    $"Starting Altitude: {_lander.StartingAltitude}",
-                    $"Target Altitude: {_lander.TargetAltitude}",
-                    $"Distance from Target: {_lander.DistanceFromTarget}",
-                    $"Total Fuel: {_lander.TotalFuel}",
-                    $"Fuel Flow Rate: {_lander.FuelFlowRate}",
-                    $"Maximum Fuel Consumption Rate: {_lander.MaxFuelRate}",
-                    $"Maximum Engine Thrust: {_lander.MaxThrust}",
-                    $"Lander Mass: {_lander.LanderMass}"
-                };
-
-                for (int i = 0; i < landerProperties.Count; i++)
-                {
-                    _landerAnimation.AnimationText[i] = landerProperties[i];
-                }
-
+                SetDomainModelLanderProperties();
                 UpdateLanderAnimation();
                 _landerAnimation.Display();
                 landOrCrash = ProcessCurrentState();
@@ -252,6 +234,10 @@ namespace SpaceGame.Lander
             }
 
             _domainModel.LanderProperties.LanderState = _landerState;
+            _domainModel.LanderProperties.Velocity = _lander.Velocity;
+            _domainModel.LanderProperties.StartingAltitude = _lander.StartingAltitude;
+            _domainModel.LanderProperties.TargetAltitude = _lander.TargetAltitude;
+            _domainModel.LanderProperties.DistanceFromTarget = _lander.DistanceFromTarget;
             _domainModel.LanderProperties.FuelFlowRate = _lander.FuelFlowRate;
             _domainModel.LanderProperties.Altitude = _lander.Altitude;
             _domainModel.LanderProperties.TotalFuel = _lander.TotalFuel;

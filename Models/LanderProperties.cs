@@ -3,6 +3,10 @@
     public class LanderProperties
     {
         public LanderState LanderState { get; set; } = LanderState.Docked;
+        public double Velocity { get; set; } = 0;       // Current velocity
+        public double StartingAltitude { get; set; } = 0; // The altitude at which the lander started its mission
+        public double TargetAltitude { get; set; } = 0; // The altitude the lander is trying to reach
+        public double DistanceFromTarget { get; set; } = 0; // How far the lander is from its target
         public double FuelFlowRate { get; set; } = 0;   // Current fuel flow rate
         public double Altitude { get; set; } = 1000;    // Current altitude
         public double TotalFuel { get; set; } = 1700;   // Current amount of fuel

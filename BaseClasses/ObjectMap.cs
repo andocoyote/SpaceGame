@@ -29,6 +29,7 @@ namespace SpaceGame.BaseClasses
         protected int _width = 0;
         protected char _charBehindPlayer = ' ';
         protected char[,]? _map = null;
+        protected string[] _mapText { get; set; } = new string[50];
         protected (int, int) _playerPosition;
         protected IOptions<ScreenOptions> _screenOptions;
         public (int, int) Position
@@ -151,6 +152,7 @@ namespace SpaceGame.BaseClasses
             // The IScreen implementation will aggregate the UX features and display them when IScreen.Display() is called
             // Only need pass _map to AddArray() once because IScreen will have a reference to it from then on
             _screen.AddGraphics(_map);
+            _screen.AddText(_mapText);
         }
 
         public void Display()
@@ -171,7 +173,7 @@ namespace SpaceGame.BaseClasses
             }
         }
 
-        public void SetPlayerPosition((int, int) currentPlayerPosition)
+        public virtual void SetPlayerPosition((int, int) currentPlayerPosition)
         {
             Position = currentPlayerPosition;
 

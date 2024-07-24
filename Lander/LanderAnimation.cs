@@ -22,12 +22,12 @@ namespace SpaceGame.Lander
         };
 
         private char[,]? _animation = null;
+        private string[] _animationText { get; set; } = new string[50];
         private DomainModel _domainModel;
         private IScreen _screen;
-        protected IOptions<ScreenOptions>? _screenOptions;
+        private IOptions<ScreenOptions>? _screenOptions;
 
         public (int, int) Position { get; set; }
-        public string[] AnimationText { get; set; } = new string[50];
         public int RowCount { get; private set; }
 
         public LanderAnimation(
@@ -57,7 +57,7 @@ namespace SpaceGame.Lander
             if (_animation == null) return;
 
             _screen.AddGraphics(_animation);
-            _screen.AddText(AnimationText);
+            _screen.AddText(_animationText);
 
             // Initialize the animation:
             //  All rows except the bottom 5 will be empty space chars.
@@ -119,6 +119,26 @@ namespace SpaceGame.Lander
 
             // Move the lander to the new position
             _animation[Position.Item1, Position.Item2] = LANDER_CHARACTER;
+
+            // Update the text
+            List<string> landerProperties = new List<string>()
+                {
+                    $"Velocity: {_domainModel.LanderProperties.Velocity}",
+                    $"Altitude: {_domainModel.LanderProperties.Altitude}",
+                    $"Starting Altitude: {_domainModel.LanderProperties.StartingAltitude}",
+                    $"Target Altitude: {_domainModel.LanderProperties.TargetAltitude}",
+                    $"Distance from Target: {_domainModel.LanderProperties.DistanceFromTarget}",
+                    $"Total Fuel: {_domainModel.LanderProperties.TotalFuel}",
+                    $"Fuel Flow Rate: {_domainModel.LanderProperties.FuelFlowRate}",
+                    $"Maximum Fuel Consumption Rate: {_domainModel.LanderProperties.MaxFuelRate}",
+                    $"Maximum Engine Thrust: {_domainModel.LanderProperties.MaxThrust}",
+                    $"Lander Mass: {_domainModel.LanderProperties.LanderMass}"
+                };
+
+            for (int i = 0; i < landerProperties.Count; i++)
+            {
+                _animationText[i] = landerProperties[i];
+            }
         }
 
         public void Display()
