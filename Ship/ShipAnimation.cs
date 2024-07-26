@@ -3,23 +3,23 @@ using SpaceGame.Interfaces;
 using SpaceGame.Models;
 using SpaceGame.Screen;
 
-namespace SpaceGame.Lander
+namespace SpaceGame.Ship
 {
-    internal class LanderAnimation : IAnimation
+    internal class ShipAnimation : IAnimation
     {
         private int _animationHeight = 0;
         private int _animationWidth = 0;
-        private const char LANDER_CHARACTER = '^';
-        private char _characterBehindLander = ' ';
-        private int _landerColumn;
+        private const char SHIP_CHARACTER = '^';
+        private char _characterBehindShip = ' ';
+        private int _shipColumn;
 
         private List<string> _terrains = new List<string>()
         {
-            @"_____________                                                                      _________________",
-            @"             \_______                                                             /                 ",
-            @"                    |                                                   _________/                  ",
-            @"                     \_______                                          /                            ",
-            @"                             \_________________________________________|                            "
+            @"______________                                                                    __________________",
+            @"|     |      |_______                                                             |                |",
+            @"|     |      |      |                                                   __________|                |",
+            @"|     |      |      |_________                                          |         |       _____    |",
+            @"|     |      |      |        |__________________________________________|         |       |   |    |"
         };
 
         private char[,]? _animation = null;
@@ -31,7 +31,7 @@ namespace SpaceGame.Lander
         public (int, int) Position { get; set; }
         public int RowCount { get; private set; }
 
-        public LanderAnimation(
+        public ShipAnimation(
             DomainModel domainModel,
             IScreen screen,
             IOptions<ScreenOptions>? screenOptions)
@@ -44,7 +44,7 @@ namespace SpaceGame.Lander
             {
                 _animationHeight = _screenOptions.Value.GraphicsHeight;
                 _animationWidth = _screenOptions.Value.GraphicsWidth;
-                _landerColumn = _animationWidth / 2;
+                _shipColumn = _animationWidth / 2;
                 RowCount = _animationHeight;
             }
 
@@ -82,8 +82,8 @@ namespace SpaceGame.Lander
                 }
             }
 
-            // Place the lander in the animation at the initial location (top or bottom)
-            if (_domainModel.LanderProperties.LanderState == LanderState.Docked)
+            // Place the ship in the animation at the initial location (top or bottom)
+            if (_domainModel.ShipProperties.ShipState == ShipState.Docked)
             {
                 row = 0;
             }
@@ -109,36 +109,36 @@ namespace SpaceGame.Lander
                 row = _animationHeight - 1;
             }
 
-            // Put the character that was behind the lander back
-            _animation[Position.Item1, Position.Item2] = _characterBehindLander;
+            // Put the character that was behind the ship back
+            _animation[Position.Item1, Position.Item2] = _characterBehindShip;
 
             // Calculate the new position
-            Position = (row, _landerColumn);
+            Position = (row, _shipColumn);
 
             // Capture the ASCII character that will be replaced by the lander so we can put it back
-            _characterBehindLander = _animation[row, _landerColumn];
+            _characterBehindShip = _animation[row, _shipColumn];
 
-            // Move the lander to the new position
-            _animation[Position.Item1, Position.Item2] = LANDER_CHARACTER;
+            // Move the ship to the new position
+            _animation[Position.Item1, Position.Item2] = SHIP_CHARACTER;
 
             // Update the text
-            List<string> landerProperties = new List<string>()
+            List<string> shipProperties = new List<string>()
                 {
-                    $"Velocity: {_domainModel.LanderProperties.Velocity}",
-                    $"Altitude: {_domainModel.LanderProperties.Altitude}",
-                    $"Starting Altitude: {_domainModel.LanderProperties.StartingAltitude}",
-                    $"Target Altitude: {_domainModel.LanderProperties.TargetAltitude}",
-                    $"Distance from Target: {_domainModel.LanderProperties.DistanceFromTarget}",
-                    $"Total Fuel: {_domainModel.LanderProperties.TotalFuel}",
-                    $"Fuel Flow Rate: {_domainModel.LanderProperties.FuelFlowRate}",
-                    $"Maximum Fuel Consumption Rate: {_domainModel.LanderProperties.MaxFuelRate}",
-                    $"Maximum Engine Thrust: {_domainModel.LanderProperties.MaxThrust}",
-                    $"Lander Mass: {_domainModel.LanderProperties.LanderMass}"
+                    $"Velocity: {_domainModel.ShipProperties.Velocity}",
+                    $"Altitude: {_domainModel.ShipProperties.Altitude}",
+                    $"Starting Altitude: {_domainModel.ShipProperties.StartingAltitude}",
+                    $"Target Altitude: {_domainModel.ShipProperties.TargetAltitude}",
+                    $"Distance from Target: {_domainModel.ShipProperties.DistanceFromTarget}",
+                    $"Total Fuel: {_domainModel.ShipProperties.TotalFuel}",
+                    $"Fuel Flow Rate: {_domainModel.ShipProperties.FuelFlowRate}",
+                    $"Maximum Fuel Consumption Rate: {_domainModel.ShipProperties.MaxFuelRate}",
+                    $"Maximum Engine Thrust: {_domainModel.ShipProperties.MaxThrust}",
+                    $"Lander Mass: {_domainModel.ShipProperties.LanderMass}"
                 };
 
-            for (int i = 0; i < landerProperties.Count; i++)
+            for (int i = 0; i < shipProperties.Count; i++)
             {
-                _animationText[i] = landerProperties[i];
+                _animationText[i] = shipProperties[i];
             }
         }
 

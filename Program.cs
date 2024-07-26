@@ -9,6 +9,7 @@ using SpaceGame.Models;
 using SpaceGame.Navigation;
 using SpaceGame.Planet;
 using SpaceGame.Screen;
+using SpaceGame.Ship;
 using SpaceGame.Space;
 
 namespace SpaceGame
@@ -30,7 +31,8 @@ namespace SpaceGame
             // Maps, animation, and screen
             builder.Services.AddKeyedSingleton<IMap, SpaceMap>("Space");
             builder.Services.AddKeyedSingleton<IMap, PlanetMap>("Planet");
-            builder.Services.AddSingleton<ILanderAnimation, LanderAnimation>();
+            builder.Services.AddKeyedSingleton<IAnimation, ShipAnimation>("Ship");
+            builder.Services.AddKeyedSingleton<IAnimation, LanderAnimation>("Lander");
             builder.Services.AddTransient<IScreen, Screen.Screen>();    // Transient because we need one per map
 
             // Navigation
@@ -38,6 +40,7 @@ namespace SpaceGame
             builder.Services.AddSingleton<INavigation, Navigation.Navigation>();;
 
             // Scenarios
+            builder.Services.AddKeyedSingleton<IScenario, ShipLoop>("Ship");
             builder.Services.AddKeyedSingleton<IScenario, LanderLoop>("Lander");
 
             // Since SpaceMap implements IMap, have to create the Navigation
@@ -74,13 +77,14 @@ namespace SpaceGame
             // Have to request SpaceLoop and PlanetLoop since the both implement IScenario
             builder.Services.AddSingleton<GameLoop.GameLoop>(sp =>
             {
+                var shipLoop = sp.GetKeyedService<IScenario>("Ship");
                 var spaceLoop = sp.GetServices<IScenario>().OfType<SpaceLoop>().FirstOrDefault();
                 var landerLoop = sp.GetKeyedService<IScenario>("Lander");
                 var planetLoop = sp.GetServices<IScenario>().OfType<PlanetLoop>().FirstOrDefault();
                 var domainModel = sp.GetRequiredService<DomainModel>();
                 var logger = sp.GetRequiredService<ILogger>();
 
-                return new GameLoop.GameLoop(spaceLoop, landerLoop, planetLoop, domainModel, logger);
+                return new GameLoop.GameLoop(shipLoop, spaceLoop, landerLoop, planetLoop, domainModel, logger);
             });
 
             using IHost host = builder.Build();

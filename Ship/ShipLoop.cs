@@ -2,9 +2,9 @@
 using SpaceGame.Interfaces;
 using SpaceGame.Models;
 
-namespace SpaceGame.Lander
+namespace SpaceGame.Ship
 {
-    internal class LanderLoop : IScenario
+    internal class ShipLoop : IScenario
     {
         //ANDREW MIKESELL
         //CS-210-A
@@ -15,19 +15,19 @@ namespace SpaceGame.Lander
         private double fuelFlowRate;        // Current fuel flow rate
         private double currentFlowRate;     // Fuel flow rate/max fuel rate
 
-        private Lander? _lander;
+        private Ship? _ship;
         private DomainModel _domainModel;
-        private IAnimation _landerAnimation;
-        private LanderState _landerState = LanderState.None;
+        private IAnimation _shipAnimation;
+        private ShipState _shipState = ShipState.None;
 
-        public LanderLoop(
+        public ShipLoop(
             DomainModel domainModel,
-            [FromKeyedServices("Lander")] IAnimation landerAnimation)
+            [FromKeyedServices("Ship")] IAnimation shipAnimation)
         {
             _domainModel = domainModel;
-            _landerAnimation = landerAnimation;
+            _shipAnimation = shipAnimation;
 
-            _landerAnimation.Build();
+            _shipAnimation.Build();
         }
 
         public DomainModel Run()
@@ -37,8 +37,8 @@ namespace SpaceGame.Lander
 
             Console.Clear();
 
-            UpdateLanderAnimation();
-            _landerAnimation.Display();
+            UpdateShipAnimation();
+            _shipAnimation.Display();
 
             InstructUser();
 
@@ -49,32 +49,32 @@ namespace SpaceGame.Lander
                 switch (selection)
                 {
                     case 1: 
-                        // If lander is docked at the ship in space, start with default values
-                        if (_domainModel.LanderProperties.LanderState == LanderState.Docked)
+                        // If ship is in orbit in space, start with default values
+                        if (_domainModel.ShipProperties.ShipState == ShipState.Docked)
                         {
-                            _lander = new Lander();
-                            _lander.LanderState = LanderState.Landing;
+                            _ship = new Ship();
+                            _ship.ShipState = ShipState.Landing;
 
                             exit = Fly();
-                            SetDomainModelLanderProperties();
+                            SetDomainModelShipProperties();
                         }
-                        // If lander is on a planet, start with previous lander properties from Domain Model
+                        // If ship is on a planet, start with previous lander properties from Domain Model
                         else
                         {
-                            _lander = new Lander(
-                                _domainModel.LanderProperties.FuelFlowRate,
-                                _domainModel.LanderProperties.Altitude,
-                                _domainModel.LanderProperties.TotalFuel,
-                                _domainModel.LanderProperties.LanderMass,
-                                _domainModel.LanderProperties.MaxFuelRate,
-                                _domainModel.LanderProperties.MaxThrust,
-                                _domainModel.LanderProperties.FreeFallAcceleration,
-                                _domainModel.LanderProperties.LanderState);
+                            _ship = new Ship(
+                                _domainModel.ShipProperties.FuelFlowRate,
+                                _domainModel.ShipProperties.Altitude,
+                                _domainModel.ShipProperties.TotalFuel,
+                                _domainModel.ShipProperties.LanderMass,
+                                _domainModel.ShipProperties.MaxFuelRate,
+                                _domainModel.ShipProperties.MaxThrust,
+                                _domainModel.ShipProperties.FreeFallAcceleration,
+                                _domainModel.ShipProperties.ShipState);
 
-                            _lander.LanderState = LanderState.Docking;
+                            _ship.ShipState = ShipState.Docking;
 
                             exit = Fly();
-                            SetDomainModelLanderProperties();
+                            SetDomainModelShipProperties();
                         }
                         
                         break;
@@ -100,14 +100,14 @@ namespace SpaceGame.Lander
             return _domainModel;
         }
 
-        // Use the Lander properties to calculate the motion of the lander
-        // Run the LanderAnimation and move the player charactor
+        // Use the Ship properties to calculate the motion of the ship
+        // Run the ShipAnimation and move the player charactor
         private bool Fly()
         {
             bool landOrCrash = false;
             string? flowrate = string.Empty;
 
-            if (_lander == null)
+            if (_ship == null)
             {
                 // TODO: this needs to return a code indicating bad state (along with crashed, landed, etc.
                 return false;
@@ -145,23 +145,23 @@ namespace SpaceGame.Lander
                 }
 
                 // Calculate current flow rate as (fuel flow/max fuel rate)
-                currentFlowRate = _lander.ChangeFlow(fuelFlowRate);
+                currentFlowRate = _ship.ChangeFlow(fuelFlowRate);
 
                 Console.Clear();
 
                 // Use the ship configuration to run one landing or docking cycle
-                if (_lander.LanderState == LanderState.Landing)
+                if (_ship.ShipState == ShipState.Landing)
                 {
-                    _landerState = _lander.RunLandingCycle(currentFlowRate);
+                    _shipState = _ship.RunLandingCycle(currentFlowRate);
                 }
-                else if (_lander.LanderState == LanderState.Docking)
+                else if (_ship.ShipState == ShipState.Docking)
                 {
-                    _landerState = _lander.RunDockingCycle(currentFlowRate);
+                    _shipState = _ship.RunDockingCycle(currentFlowRate);
                 }
 
-                SetDomainModelLanderProperties();
-                UpdateLanderAnimation();
-                _landerAnimation.Display();
+                SetDomainModelShipProperties();
+                UpdateShipAnimation();
+                _shipAnimation.Display();
                 landOrCrash = ProcessCurrentState();
 
             } while (!landOrCrash); // While lander has not landed or crashed
@@ -171,81 +171,81 @@ namespace SpaceGame.Lander
 
         private bool ProcessCurrentState()
         {
-            bool exitLanderLoop = false;
+            bool exitShipLoop = false;
 
-            switch (_landerState)
+            switch (_shipState)
             {
-                case LanderState.Flying:
+                case ShipState.Flying:
                     break;
-                case LanderState.Landed:
+                case ShipState.Landed:
                     Console.WriteLine($"You've landed successfully!");
-                    SetDomainModelLanderProperties();
-                    _domainModel.GameState = GameState.OnLandingZone;
-                    exitLanderLoop = true;
+                    SetDomainModelShipProperties();
+                    _domainModel.GameState = GameState.OnHomePlanet;
+                    exitShipLoop = true;
                     break;
-                case LanderState.OutOfFuel:
+                case ShipState.OutOfFuel:
                     Console.WriteLine($"You ran out of fuel and will crash into the planet.");
-                    _domainModel.GameState = GameState.LanderCrashed;
-                    exitLanderLoop = true;
+                    _domainModel.GameState = GameState.ShipCrashed;
+                    exitShipLoop = true;
                     break;
-                case LanderState.Crashed:
-                    Console.WriteLine($"Your lander has smashed into the planet!");
-                    _domainModel.GameState = GameState.LanderCrashed;
-                    exitLanderLoop = true;
+                case ShipState.Crashed:
+                    Console.WriteLine($"Your ship has smashed into the planet!");
+                    _domainModel.GameState = GameState.ShipCrashed;
+                    exitShipLoop = true;
                     break;
-                case LanderState.Docked:
-                    Console.WriteLine($"You've docked successfully!");
-                    SetDomainModelLanderProperties();
-                    _domainModel.GameState = GameState.OverPlanet;
-                    exitLanderLoop = true;
+                case ShipState.Docked:
+                    Console.WriteLine($"You've reached orbit successfully!");
+                    SetDomainModelShipProperties();
+                    _domainModel.GameState = GameState.OverHomePlanet;
+                    exitShipLoop = true;
                     break;
                 default:
                     break;
             }
 
-            return exitLanderLoop;
+            return exitShipLoop;
         }
 
-        private void UpdateLanderAnimation()
+        private void UpdateShipAnimation()
         {
-            if (_lander == null) return;
-            if (_landerAnimation == null) return;
+            if (_ship == null) return;
+            if (_shipAnimation == null) return;
 
             // Calculate the row to which to move
-            double totalDistance = Math.Abs(_lander.StartingAltitude - _lander.TargetAltitude);
-            int metersPerRow = (int)(totalDistance / _landerAnimation.RowCount);
-            int row = (int)(_lander.DistanceFromTarget / metersPerRow);
+            double totalDistance = Math.Abs(_ship.StartingAltitude - _ship.TargetAltitude);
+            int metersPerRow = (int)(totalDistance / _shipAnimation.RowCount);
+            int row = (int)(_ship.DistanceFromTarget / metersPerRow);
 
-            if (_lander.LanderState == LanderState.Landing)
+            if (_ship.ShipState == ShipState.Landing)
             {
-                row = Math.Abs(row - _landerAnimation.RowCount) - 1;
+                row = Math.Abs(row - _shipAnimation.RowCount) - 1;
             }
 
-            // Move the lander
-            _landerAnimation.MoveToRow(row);
+            // Move the ship
+            _shipAnimation.MoveToRow(row);
         }
 
-        // Keep track of the current lander properties for use in the Domain Model
-        private void SetDomainModelLanderProperties()
+        // Keep track of the current ship properties for use in the Domain Model
+        private void SetDomainModelShipProperties()
         {
-            if (_lander == null)
+            if (_ship == null)
             {
                 return;
             }
 
-            _domainModel.LanderProperties.LanderState = _landerState;
-            _domainModel.LanderProperties.Velocity = _lander.Velocity;
-            _domainModel.LanderProperties.StartingAltitude = _lander.StartingAltitude;
-            _domainModel.LanderProperties.TargetAltitude = _lander.TargetAltitude;
-            _domainModel.LanderProperties.DistanceFromTarget = _lander.DistanceFromTarget;
-            _domainModel.LanderProperties.FuelFlowRate = _lander.FuelFlowRate;
-            _domainModel.LanderProperties.Altitude = _lander.Altitude;
-            _domainModel.LanderProperties.TotalFuel = _lander.TotalFuel;
-            _domainModel.LanderProperties.LanderMass = _lander.LanderMass;
-            _domainModel.LanderProperties.TotalMass = _lander.TotalMass;
-            _domainModel.LanderProperties.MaxFuelRate = _lander.MaxFuelRate;
-            _domainModel.LanderProperties.MaxThrust = _lander.MaxThrust;
-            _domainModel.LanderProperties.FreeFallAcceleration = _lander.FreeFallAcceleration;
+            _domainModel.ShipProperties.ShipState = _shipState;
+            _domainModel.ShipProperties.Velocity = _ship.Velocity;
+            _domainModel.ShipProperties.StartingAltitude = _ship.StartingAltitude;
+            _domainModel.ShipProperties.TargetAltitude = _ship.TargetAltitude;
+            _domainModel.ShipProperties.DistanceFromTarget = _ship.DistanceFromTarget;
+            _domainModel.ShipProperties.FuelFlowRate = _ship.FuelFlowRate;
+            _domainModel.ShipProperties.Altitude = _ship.Altitude;
+            _domainModel.ShipProperties.TotalFuel = _ship.TotalFuel;
+            _domainModel.ShipProperties.LanderMass = _ship.LanderMass;
+            _domainModel.ShipProperties.TotalMass = _ship.TotalMass;
+            _domainModel.ShipProperties.MaxFuelRate = _ship.MaxFuelRate;
+            _domainModel.ShipProperties.MaxThrust = _ship.MaxThrust;
+            _domainModel.ShipProperties.FreeFallAcceleration = _ship.FreeFallAcceleration;
     }
 
         private int UserMenu()
@@ -253,7 +253,7 @@ namespace SpaceGame.Lander
             int choice;
 
             Console.WriteLine("Please choose from the following options:");
-            Console.WriteLine("1. Fire-up the lander");
+            Console.WriteLine("1. Fire-up the ship");
             Console.WriteLine("2. Abort the operation");
             Console.WriteLine("3. Display user instructions");
             Console.WriteLine("Enter your choice: ");
@@ -268,13 +268,13 @@ namespace SpaceGame.Lander
 
         private void InstructUser()
         {
-            if (_domainModel.GameState == GameState.InitiatePlanetLanding)
+            if (_domainModel.GameState == GameState.InitiateHomePlanetLanding)
             {
                 Console.WriteLine("You will attempt to land your ship on the planet.");
             }
             else
             {
-                Console.WriteLine("You will attempt to dock your lander to the ship.");
+                Console.WriteLine("You will attempt to launch your ship to orbit.");
             }
             
             Console.WriteLine("In order to accomplish this, your velocity");

@@ -9,6 +9,7 @@ namespace SpaceGame.GameLoop
     // Main Game Loop object
     internal class GameLoop
     {
+        private IScenario? _shipLoop;
         private IScenario? _spaceLoop;
         private IScenario? _landerLoop;
         private IScenario? _planetLoop;
@@ -17,12 +18,14 @@ namespace SpaceGame.GameLoop
 
         // GameLoop will run scenarios based on properties stored in the DomainModel
         public GameLoop(
+            [FromKeyedServices("Ship")] IScenario? shipLoop,
             IScenario? spaceLoop,
             [FromKeyedServices("Lander")] IScenario? landerLoop,
             IScenario? planetloop,
             DomainModel domainModel,
             ILogger logger)
         {
+            _shipLoop = shipLoop;
             _spaceLoop = spaceLoop;
             _landerLoop = landerLoop;
             _planetLoop = planetloop;
@@ -33,14 +36,16 @@ namespace SpaceGame.GameLoop
         // Run a scenario for the Domain Model State property
         public void Run()
         {
-            if (_spaceLoop == null ||
+            if (_shipLoop == null ||
+                _spaceLoop == null ||
                 _landerLoop == null ||
                 _planetLoop == null)
             {
                 return;
             }
 
-            _domainModel.GameState = GameState.EmtpySpace;
+            //_domainModel.GameState = GameState.EmtpySpace;
+            _domainModel.GameState = GameState.OnHomePlanet;
             bool runGameLoop = true;
 
             SplashPage.DisplaySplashPage();
@@ -54,16 +59,22 @@ namespace SpaceGame.GameLoop
 
                 switch (_domainModel.GameState)
                 {
+                    case GameState.OnHomePlanet:
+                        _domainModel = _shipLoop.Run();
+                        break;
                     case GameState.None:
+                    case GameState.OverHomePlanet:
                     case GameState.EmtpySpace:
                         _domainModel = _spaceLoop.Run();
                         break;
-
+                    case GameState.InitiateHomePlanetLanding:
+                        _domainModel = _shipLoop.Run();
+                        break;
                     case GameState.OverPlanet:
                         _domainModel = _spaceLoop.Run();
                         break;
 
-                    case GameState.InitiateLanding:
+                    case GameState.InitiatePlanetLanding:
                         _domainModel = _landerLoop.Run();
                         break;
 

@@ -92,7 +92,7 @@ namespace SpaceGame.Space
                     {
                         if (_domainModel != null)
                         {
-                            _domainModel.GameState = GameState.InitiateLanding;
+                            _domainModel.GameState = GameState.InitiatePlanetLanding;
                         }
                         
                         continueScenario = false;
@@ -111,13 +111,13 @@ namespace SpaceGame.Space
 
                     if (selection == 'y')
                     {
-                        Console.WriteLine("TODO: Refuel, etc. on home planet.");
-                        /*if (_domainModel != null)
+                        Console.WriteLine("Refuel, etc. on home planet.");
+                        if (_domainModel != null)
                         {
-                            _domainModel.GameState = GameState.InitiateLanding;
+                            _domainModel.GameState = GameState.InitiateHomePlanetLanding;
                         }
 
-                        continueScenario = false;*/
+                        continueScenario = false;
                     }
 
                     break;

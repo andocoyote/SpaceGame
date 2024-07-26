@@ -1,6 +1,6 @@
-﻿namespace SpaceGame.Lander
+﻿namespace SpaceGame.Interfaces
 {
-    internal interface ILanderAnimation
+    internal interface IAnimation
     {
         (int, int) Position { get; set; }
         int RowCount { get; }
