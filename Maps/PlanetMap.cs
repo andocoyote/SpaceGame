@@ -12,9 +12,11 @@ namespace SpaceGame.Maps
 
         public PlanetMap(
             IScreen screen,
+            DomainModel domainModel,
             ILogger logger,
-            IOptions<ScreenOptions> screenOptions) : base(screen, logger, screenOptions)
+            IOptions<ScreenOptions> screenOptions) : base(screen, domainModel, logger, screenOptions)
         {
+            // Set all of the default values
             _mapObjectType = MapObjectType.Mountain;
             _homePositionObjectType = MapObjectType.LandingZone;
             _playerCharacter = '#';

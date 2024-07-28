@@ -8,15 +8,13 @@ namespace SpaceGame.Maps
 {
     internal class SpaceMap : ObjectMap
     {
-        private DomainModel _domainModel;
-
         public string GetMapType() => "SpaceMap";
 
         public SpaceMap(
             IScreen screen,
             DomainModel domainModel,
             ILogger logger,
-            IOptions<ScreenOptions> screenOptions) : base(screen, logger, screenOptions)
+            IOptions<ScreenOptions> screenOptions) : base(screen, domainModel, logger, screenOptions)
         {
             _domainModel = domainModel;
 
@@ -33,21 +31,21 @@ namespace SpaceGame.Maps
         {
             base.SetPlayerPosition(currentPlayerPosition);
 
-            List<string> shipProperties = new List<string>()
+            List<string> ShipModel = new List<string>()
                 {
                     "Ship Properties:",
-                    $"Total Fuel: {_domainModel.ShipProperties.TotalFuel}",
+                    $"Total Fuel: {_domainModel.ShipModel.TotalFuel}",
                     "Lander Properties:",
-                    $"Total Fuel: {_domainModel.LanderProperties.TotalFuel}",
-                    $"Fuel Flow Rate: {_domainModel.LanderProperties.FuelFlowRate}",
-                    $"Maximum Fuel Consumption Rate: {_domainModel.LanderProperties.MaxFuelRate}",
-                    $"Maximum Engine Thrust: {_domainModel.LanderProperties.MaxThrust}",
-                    $"Lander Mass: {_domainModel.LanderProperties.LanderMass}"
+                    $"Total Fuel: {_domainModel.LanderModel.TotalFuel}",
+                    $"Fuel Flow Rate: {_domainModel.LanderModel.FuelFlowRate}",
+                    $"Maximum Fuel Consumption Rate: {_domainModel.LanderModel.MaxFuelRate}",
+                    $"Maximum Engine Thrust: {_domainModel.LanderModel.MaxThrust}",
+                    $"Lander Mass: {_domainModel.LanderModel.LanderMass}"
                 };
 
-            for (int i = 0; i < shipProperties.Count; i++)
+            for (int i = 0; i < ShipModel.Count; i++)
             {
-                _mapText[i] = shipProperties[i];
+                _mapText[i] = ShipModel[i];
             }
         }
 

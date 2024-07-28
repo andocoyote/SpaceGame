@@ -50,31 +50,31 @@ namespace SpaceGame.Lander
                 {
                     case 1: 
                         // If lander is docked at the ship in space, start with default values
-                        if (_domainModel.LanderProperties.LanderState == LanderState.Docked)
+                        if (_domainModel.LanderModel.LanderState == LanderState.Docked)
                         {
                             _lander = new Lander();
                             _lander.LanderState = LanderState.Landing;
 
                             exit = Fly();
-                            SetDomainModelLanderProperties();
+                            SetDomainModelLanderModel();
                         }
                         // If lander is on a planet, start with previous lander properties from Domain Model
                         else
                         {
                             _lander = new Lander(
-                                _domainModel.LanderProperties.FuelFlowRate,
-                                _domainModel.LanderProperties.Altitude,
-                                _domainModel.LanderProperties.TotalFuel,
-                                _domainModel.LanderProperties.LanderMass,
-                                _domainModel.LanderProperties.MaxFuelRate,
-                                _domainModel.LanderProperties.MaxThrust,
-                                _domainModel.LanderProperties.FreeFallAcceleration,
-                                _domainModel.LanderProperties.LanderState);
+                                _domainModel.LanderModel.FuelFlowRate,
+                                _domainModel.LanderModel.Altitude,
+                                _domainModel.LanderModel.TotalFuel,
+                                _domainModel.LanderModel.LanderMass,
+                                _domainModel.LanderModel.MaxFuelRate,
+                                _domainModel.LanderModel.MaxThrust,
+                                _domainModel.LanderModel.FreeFallAcceleration,
+                                _domainModel.LanderModel.LanderState);
 
                             _lander.LanderState = LanderState.Docking;
 
                             exit = Fly();
-                            SetDomainModelLanderProperties();
+                            SetDomainModelLanderModel();
                         }
                         
                         break;
@@ -159,7 +159,7 @@ namespace SpaceGame.Lander
                     _landerState = _lander.RunDockingCycle(currentFlowRate);
                 }
 
-                SetDomainModelLanderProperties();
+                SetDomainModelLanderModel();
                 UpdateLanderAnimation();
                 _landerAnimation.Display();
                 landOrCrash = ProcessCurrentState();
@@ -179,7 +179,7 @@ namespace SpaceGame.Lander
                     break;
                 case LanderState.Landed:
                     Console.WriteLine($"You've landed successfully!");
-                    SetDomainModelLanderProperties();
+                    SetDomainModelLanderModel();
                     _domainModel.GameState = GameState.OnLandingZone;
                     exitLanderLoop = true;
                     break;
@@ -195,7 +195,7 @@ namespace SpaceGame.Lander
                     break;
                 case LanderState.Docked:
                     Console.WriteLine($"You've docked successfully!");
-                    SetDomainModelLanderProperties();
+                    SetDomainModelLanderModel();
                     _domainModel.GameState = GameState.OverPlanet;
                     exitLanderLoop = true;
                     break;
@@ -226,27 +226,21 @@ namespace SpaceGame.Lander
         }
 
         // Keep track of the current lander properties for use in the Domain Model
-        private void SetDomainModelLanderProperties()
+        private void SetDomainModelLanderModel()
         {
             if (_lander == null)
             {
                 return;
             }
 
-            _domainModel.LanderProperties.LanderState = _landerState;
-            _domainModel.LanderProperties.Velocity = _lander.Velocity;
-            _domainModel.LanderProperties.StartingAltitude = _lander.StartingAltitude;
-            _domainModel.LanderProperties.TargetAltitude = _lander.TargetAltitude;
-            _domainModel.LanderProperties.DistanceFromTarget = _lander.DistanceFromTarget;
-            _domainModel.LanderProperties.FuelFlowRate = _lander.FuelFlowRate;
-            _domainModel.LanderProperties.Altitude = _lander.Altitude;
-            _domainModel.LanderProperties.TotalFuel = _lander.TotalFuel;
-            _domainModel.LanderProperties.LanderMass = _lander.LanderMass;
-            _domainModel.LanderProperties.TotalMass = _lander.TotalMass;
-            _domainModel.LanderProperties.MaxFuelRate = _lander.MaxFuelRate;
-            _domainModel.LanderProperties.MaxThrust = _lander.MaxThrust;
-            _domainModel.LanderProperties.FreeFallAcceleration = _lander.FreeFallAcceleration;
-    }
+            // TODO: since this function interfaces with Lander instance,
+            // call Lander.GenerateModel() to return a state model, e.g. LanderModel/Model object.
+            // Then, add it to the aggregated DomainModel instead of doing as below ...
+            // Have every object be able to create its own model object for aggregating and serializing
+            //  GenerateModel(), SerializeModel(), and DeserializeModel()
+
+            _domainModel.LanderModel = _lander.GenerateModel();
+        }
 
         private int UserMenu()
         {

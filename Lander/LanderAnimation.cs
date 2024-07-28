@@ -83,7 +83,7 @@ namespace SpaceGame.Lander
             }
 
             // Place the lander in the animation at the initial location (top or bottom)
-            if (_domainModel.LanderProperties.LanderState == LanderState.Docked)
+            if (_domainModel.LanderModel.LanderState == LanderState.Docked)
             {
                 row = 0;
             }
@@ -122,23 +122,23 @@ namespace SpaceGame.Lander
             _animation[Position.Item1, Position.Item2] = LANDER_CHARACTER;
 
             // Update the text
-            List<string> landerProperties = new List<string>()
+            List<string> LanderModel = new List<string>()
                 {
-                    $"Velocity: {_domainModel.LanderProperties.Velocity}",
-                    $"Altitude: {_domainModel.LanderProperties.Altitude}",
-                    $"Starting Altitude: {_domainModel.LanderProperties.StartingAltitude}",
-                    $"Target Altitude: {_domainModel.LanderProperties.TargetAltitude}",
-                    $"Distance from Target: {_domainModel.LanderProperties.DistanceFromTarget}",
-                    $"Total Fuel: {_domainModel.LanderProperties.TotalFuel}",
-                    $"Fuel Flow Rate: {_domainModel.LanderProperties.FuelFlowRate}",
-                    $"Maximum Fuel Consumption Rate: {_domainModel.LanderProperties.MaxFuelRate}",
-                    $"Maximum Engine Thrust: {_domainModel.LanderProperties.MaxThrust}",
-                    $"Lander Mass: {_domainModel.LanderProperties.LanderMass}"
+                    $"Velocity: {_domainModel.LanderModel.Velocity}",
+                    $"Altitude: {_domainModel.LanderModel.Altitude}",
+                    $"Starting Altitude: {_domainModel.LanderModel.StartingAltitude}",
+                    $"Target Altitude: {_domainModel.LanderModel.TargetAltitude}",
+                    $"Distance from Target: {_domainModel.LanderModel.DistanceFromTarget}",
+                    $"Total Fuel: {_domainModel.LanderModel.TotalFuel}",
+                    $"Fuel Flow Rate: {_domainModel.LanderModel.FuelFlowRate}",
+                    $"Maximum Fuel Consumption Rate: {_domainModel.LanderModel.MaxFuelRate}",
+                    $"Maximum Engine Thrust: {_domainModel.LanderModel.MaxThrust}",
+                    $"Lander Mass: {_domainModel.LanderModel.LanderMass}"
                 };
 
-            for (int i = 0; i < landerProperties.Count; i++)
+            for (int i = 0; i < LanderModel.Count; i++)
             {
-                _animationText[i] = landerProperties[i];
+                _animationText[i] = LanderModel[i];
             }
         }
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using SpaceGame.Models;
 
 namespace SpaceGame.Lander
@@ -216,6 +218,45 @@ namespace SpaceGame.Lander
             }
 
             return this.LanderState;
+        }
+
+        public LanderModel GenerateModel()
+        {
+            LanderModel model = new LanderModel()
+            {
+                LanderState = LanderState,
+                Velocity = Velocity,
+                StartingAltitude = StartingAltitude,
+                TargetAltitude = TargetAltitude,
+                DistanceFromTarget = DistanceFromTarget,
+                FuelFlowRate = FuelFlowRate,
+                Altitude = Altitude,
+                TotalFuel = TotalFuel,
+                LanderMass = LanderMass,
+                TotalMass = TotalMass,
+                MaxFuelRate = MaxFuelRate,
+                MaxThrust = MaxThrust,
+                FreeFallAcceleration = FreeFallAcceleration
+            };
+
+            return model;
+        }
+        public string SerializeModel(LanderModel model)
+        {
+            string modelSerialized = JsonSerializer.Serialize(model);
+
+            return modelSerialized;
+        }
+        public LanderModel? DeserializeModel(string model)
+        {
+            if (string.IsNullOrEmpty(model))
+            {
+                return null;
+            }
+
+            LanderModel? landerModelDeserialized = JsonSerializer.Deserialize<LanderModel>(model);
+
+            return landerModelDeserialized;
         }
     }
 }

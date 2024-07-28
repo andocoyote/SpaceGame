@@ -31,6 +31,7 @@ namespace SpaceGame.BaseClasses
         protected char[,]? _map = null;
         protected string[] _mapText { get; set; } = new string[50];
         protected (int, int) _playerPosition;
+        protected DomainModel _domainModel;
         protected IOptions<ScreenOptions> _screenOptions;
         public (int, int) Position
         {
@@ -59,10 +60,12 @@ namespace SpaceGame.BaseClasses
 
         public ObjectMap(
             IScreen screen,
+            DomainModel domainModel,
             ILogger logger,
             IOptions<ScreenOptions> screenOptions)
         {
             _screen = screen;
+            _domainModel = domainModel;
             _logger = logger;
             _screenOptions = screenOptions;
 
@@ -73,6 +76,9 @@ namespace SpaceGame.BaseClasses
         // Create the map matrix with randomly placed objects as specified
         public void Build(int height, int width)
         {
+            if (_domainModel == null) return;
+            if (_screen == null) return;
+
             Random rand = new Random();
 
             _width = width;
@@ -148,6 +154,9 @@ namespace SpaceGame.BaseClasses
 
             // Add the player character to the start position
             SetPlayerPosition((homeRow, homeColumn));
+
+            // Set the MapObject properties in the domain model
+            _domainModel.MapObject = ObjectDictionary[objectName];
 
             // The IScreen implementation will aggregate the UX features and display them when IScreen.Display() is called
             // Only need pass _map to AddArray() once because IScreen will have a reference to it from then on

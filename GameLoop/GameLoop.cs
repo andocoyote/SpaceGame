@@ -113,14 +113,14 @@ namespace SpaceGame.GameLoop
             _logger.DebugPrintLine("Printing GameState:");
             _logger.DebugPrintLine($"\tGameState: {_domainModel.GameState}");
             _logger.DebugPrintLine("Printing Lander Properties:");
-            _logger.DebugPrintLine($"\tLanderState: {_domainModel.LanderProperties.LanderState}");
-            _logger.DebugPrintLine($"\tAltitude: {_domainModel.LanderProperties.Altitude}");
-            _logger.DebugPrintLine($"\tTotalFuel: {_domainModel.LanderProperties.TotalFuel}");
-            _logger.DebugPrintLine($"\tFuelFlowRate: {_domainModel.LanderProperties.FuelFlowRate}");
-            _logger.DebugPrintLine($"\tMaxFuelRate: {_domainModel.LanderProperties.MaxFuelRate}");
-            _logger.DebugPrintLine($"\tLanderMass: {_domainModel.LanderProperties.LanderMass}");
-            _logger.DebugPrintLine($"\tMaxThrust: {_domainModel.LanderProperties.MaxThrust}");
-            _logger.DebugPrintLine($"\tFreeFallAcceleration: {_domainModel.LanderProperties.FreeFallAcceleration}");
+            _logger.DebugPrintLine($"\tLanderState: {_domainModel.LanderModel.LanderState}");
+            _logger.DebugPrintLine($"\tAltitude: {_domainModel.LanderModel.Altitude}");
+            _logger.DebugPrintLine($"\tTotalFuel: {_domainModel.LanderModel.TotalFuel}");
+            _logger.DebugPrintLine($"\tFuelFlowRate: {_domainModel.LanderModel.FuelFlowRate}");
+            _logger.DebugPrintLine($"\tMaxFuelRate: {_domainModel.LanderModel.MaxFuelRate}");
+            _logger.DebugPrintLine($"\tLanderMass: {_domainModel.LanderModel.LanderMass}");
+            _logger.DebugPrintLine($"\tMaxThrust: {_domainModel.LanderModel.MaxThrust}");
+            _logger.DebugPrintLine($"\tFreeFallAcceleration: {_domainModel.LanderModel.FreeFallAcceleration}");
         }
     }
 }

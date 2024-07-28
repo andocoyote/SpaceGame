@@ -1,4 +1,5 @@
 ﻿using SpaceGame.Models;
+using System.Text.Json;
 
 namespace SpaceGame.Ship
 {
@@ -215,6 +216,45 @@ namespace SpaceGame.Ship
             }
 
             return this.ShipState;
+        }
+
+        public ShipModel GenerateModel()
+        {
+            ShipModel model = new ShipModel()
+            {
+                ShipState = ShipState,
+                Velocity = Velocity,
+                StartingAltitude = StartingAltitude,
+                TargetAltitude = TargetAltitude,
+                DistanceFromTarget = DistanceFromTarget,
+                FuelFlowRate = FuelFlowRate,
+                Altitude = Altitude,
+                TotalFuel = TotalFuel,
+                LanderMass = LanderMass,
+                TotalMass = TotalMass,
+                MaxFuelRate = MaxFuelRate,
+                MaxThrust = MaxThrust,
+                FreeFallAcceleration = FreeFallAcceleration
+            };
+
+            return model;
+        }
+        public string SerializeModel(ShipModel model)
+        {
+            string modelSerialized = JsonSerializer.Serialize(model);
+
+            return modelSerialized;
+        }
+        public ShipModel? DeserializeModel(string model)
+        {
+            if (string.IsNullOrEmpty(model))
+            {
+                return null;
+            }
+
+            ShipModel? shipModelDeserialized = JsonSerializer.Deserialize<ShipModel>(model);
+
+            return shipModelDeserialized;
         }
     }
 }

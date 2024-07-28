@@ -83,7 +83,7 @@ namespace SpaceGame.Ship
             }
 
             // Place the ship in the animation at the initial location (top or bottom)
-            if (_domainModel.ShipProperties.ShipState == ShipState.Docked)
+            if (_domainModel.ShipModel.ShipState == ShipState.Docked)
             {
                 row = 0;
             }
@@ -122,23 +122,23 @@ namespace SpaceGame.Ship
             _animation[Position.Item1, Position.Item2] = SHIP_CHARACTER;
 
             // Update the text
-            List<string> shipProperties = new List<string>()
+            List<string> ShipModel = new List<string>()
                 {
-                    $"Velocity: {_domainModel.ShipProperties.Velocity}",
-                    $"Altitude: {_domainModel.ShipProperties.Altitude}",
-                    $"Starting Altitude: {_domainModel.ShipProperties.StartingAltitude}",
-                    $"Target Altitude: {_domainModel.ShipProperties.TargetAltitude}",
-                    $"Distance from Target: {_domainModel.ShipProperties.DistanceFromTarget}",
-                    $"Total Fuel: {_domainModel.ShipProperties.TotalFuel}",
-                    $"Fuel Flow Rate: {_domainModel.ShipProperties.FuelFlowRate}",
-                    $"Maximum Fuel Consumption Rate: {_domainModel.ShipProperties.MaxFuelRate}",
-                    $"Maximum Engine Thrust: {_domainModel.ShipProperties.MaxThrust}",
-                    $"Lander Mass: {_domainModel.ShipProperties.LanderMass}"
+                    $"Velocity: {_domainModel.ShipModel.Velocity}",
+                    $"Altitude: {_domainModel.ShipModel.Altitude}",
+                    $"Starting Altitude: {_domainModel.ShipModel.StartingAltitude}",
+                    $"Target Altitude: {_domainModel.ShipModel.TargetAltitude}",
+                    $"Distance from Target: {_domainModel.ShipModel.DistanceFromTarget}",
+                    $"Total Fuel: {_domainModel.ShipModel.TotalFuel}",
+                    $"Fuel Flow Rate: {_domainModel.ShipModel.FuelFlowRate}",
+                    $"Maximum Fuel Consumption Rate: {_domainModel.ShipModel.MaxFuelRate}",
+                    $"Maximum Engine Thrust: {_domainModel.ShipModel.MaxThrust}",
+                    $"Lander Mass: {_domainModel.ShipModel.LanderMass}"
                 };
 
-            for (int i = 0; i < shipProperties.Count; i++)
+            for (int i = 0; i < ShipModel.Count; i++)
             {
-                _animationText[i] = shipProperties[i];
+                _animationText[i] = ShipModel[i];
             }
         }
 

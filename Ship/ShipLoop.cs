@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SpaceGame.Interfaces;
+using SpaceGame.Lander;
 using SpaceGame.Models;
 
 namespace SpaceGame.Ship
@@ -50,31 +51,31 @@ namespace SpaceGame.Ship
                 {
                     case 1: 
                         // If ship is in orbit in space, start with default values
-                        if (_domainModel.ShipProperties.ShipState == ShipState.Docked)
+                        if (_domainModel.ShipModel.ShipState == ShipState.Docked)
                         {
                             _ship = new Ship();
                             _ship.ShipState = ShipState.Landing;
 
                             exit = Fly();
-                            SetDomainModelShipProperties();
+                            SetDomainModelShipModel();
                         }
                         // If ship is on a planet, start with previous lander properties from Domain Model
                         else
                         {
                             _ship = new Ship(
-                                _domainModel.ShipProperties.FuelFlowRate,
-                                _domainModel.ShipProperties.Altitude,
-                                _domainModel.ShipProperties.TotalFuel,
-                                _domainModel.ShipProperties.LanderMass,
-                                _domainModel.ShipProperties.MaxFuelRate,
-                                _domainModel.ShipProperties.MaxThrust,
-                                _domainModel.ShipProperties.FreeFallAcceleration,
-                                _domainModel.ShipProperties.ShipState);
+                                _domainModel.ShipModel.FuelFlowRate,
+                                _domainModel.ShipModel.Altitude,
+                                _domainModel.ShipModel.TotalFuel,
+                                _domainModel.ShipModel.LanderMass,
+                                _domainModel.ShipModel.MaxFuelRate,
+                                _domainModel.ShipModel.MaxThrust,
+                                _domainModel.ShipModel.FreeFallAcceleration,
+                                _domainModel.ShipModel.ShipState);
 
                             _ship.ShipState = ShipState.Docking;
 
                             exit = Fly();
-                            SetDomainModelShipProperties();
+                            SetDomainModelShipModel();
                         }
                         
                         break;
@@ -159,7 +160,7 @@ namespace SpaceGame.Ship
                     _shipState = _ship.RunDockingCycle(currentFlowRate);
                 }
 
-                SetDomainModelShipProperties();
+                SetDomainModelShipModel();
                 UpdateShipAnimation();
                 _shipAnimation.Display();
                 landOrCrash = ProcessCurrentState();
@@ -179,7 +180,7 @@ namespace SpaceGame.Ship
                     break;
                 case ShipState.Landed:
                     Console.WriteLine($"You've landed successfully!");
-                    SetDomainModelShipProperties();
+                    SetDomainModelShipModel();
                     _domainModel.GameState = GameState.OnHomePlanet;
                     exitShipLoop = true;
                     break;
@@ -195,7 +196,7 @@ namespace SpaceGame.Ship
                     break;
                 case ShipState.Docked:
                     Console.WriteLine($"You've reached orbit successfully!");
-                    SetDomainModelShipProperties();
+                    SetDomainModelShipModel();
                     _domainModel.GameState = GameState.OverHomePlanet;
                     exitShipLoop = true;
                     break;
@@ -226,27 +227,15 @@ namespace SpaceGame.Ship
         }
 
         // Keep track of the current ship properties for use in the Domain Model
-        private void SetDomainModelShipProperties()
+        private void SetDomainModelShipModel()
         {
             if (_ship == null)
             {
                 return;
             }
 
-            _domainModel.ShipProperties.ShipState = _shipState;
-            _domainModel.ShipProperties.Velocity = _ship.Velocity;
-            _domainModel.ShipProperties.StartingAltitude = _ship.StartingAltitude;
-            _domainModel.ShipProperties.TargetAltitude = _ship.TargetAltitude;
-            _domainModel.ShipProperties.DistanceFromTarget = _ship.DistanceFromTarget;
-            _domainModel.ShipProperties.FuelFlowRate = _ship.FuelFlowRate;
-            _domainModel.ShipProperties.Altitude = _ship.Altitude;
-            _domainModel.ShipProperties.TotalFuel = _ship.TotalFuel;
-            _domainModel.ShipProperties.LanderMass = _ship.LanderMass;
-            _domainModel.ShipProperties.TotalMass = _ship.TotalMass;
-            _domainModel.ShipProperties.MaxFuelRate = _ship.MaxFuelRate;
-            _domainModel.ShipProperties.MaxThrust = _ship.MaxThrust;
-            _domainModel.ShipProperties.FreeFallAcceleration = _ship.FreeFallAcceleration;
-    }
+            _domainModel.ShipModel = _ship.GenerateModel();
+        }
 
         private int UserMenu()
         {
