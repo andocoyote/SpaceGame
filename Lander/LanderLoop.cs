@@ -82,6 +82,8 @@ namespace SpaceGame.Lander
                     case 2: // User wants to exit the program
                         Console.WriteLine("Exiting lander program.");
                         _domainModel.GameState = GameState.OverPlanet;
+                        _domainModel.SpaceMapModel.SpaceMapState = SpaceMapState.OverPlanet;
+
                         exit = true;
                         break;
 
@@ -175,28 +177,30 @@ namespace SpaceGame.Lander
 
             switch (_landerState)
             {
-                case LanderState.Flying:
+                case LanderState { } state when state == LanderState.Flying:
                     break;
-                case LanderState.Landed:
+                case LanderState { } state when state == LanderState.Landed:
                     Console.WriteLine($"You've landed successfully!");
                     SetDomainModelLanderModel();
                     _domainModel.GameState = GameState.OnLandingZone;
                     exitLanderLoop = true;
                     break;
-                case LanderState.OutOfFuel:
+                case LanderState { } state when state == LanderState.OutOfFuel:
                     Console.WriteLine($"You ran out of fuel and will crash into the planet.");
                     _domainModel.GameState = GameState.LanderCrashed;
                     exitLanderLoop = true;
                     break;
-                case LanderState.Crashed:
+                case LanderState { } state when state == LanderState.Crashed:
                     Console.WriteLine($"Your lander has smashed into the planet!");
                     _domainModel.GameState = GameState.LanderCrashed;
                     exitLanderLoop = true;
                     break;
-                case LanderState.Docked:
+                case LanderState { } state when state == LanderState.Docked:
                     Console.WriteLine($"You've docked successfully!");
                     SetDomainModelLanderModel();
                     _domainModel.GameState = GameState.OverPlanet;
+                    _domainModel.SpaceMapModel.SpaceMapState = SpaceMapState.OverPlanet;
+
                     exitLanderLoop = true;
                     break;
                 default:

@@ -1,4 +1,5 @@
-﻿using SpaceGame.Interfaces;
+﻿using SpaceGame.BaseClasses;
+using SpaceGame.Interfaces;
 using SpaceGame.Loggers;
 using SpaceGame.Models;
 
@@ -102,7 +103,9 @@ namespace SpaceGame.Space
 
                 case GameState.OverHomePlanet:
                     _navigation.DisplayMap();
-                    Console.Write($"You are over {_domainModel?.MapObject?.Label}. Want to descend? (y/n) :");
+                    MapObject? homePlanet = _domainModel?.SpaceMapModel?.ObjectAtPosition;
+
+                    Console.Write($"You are over {homePlanet?.Label}. Want to descend? (y/n) :");
 
                     while (!char.TryParse(Console.ReadLine(), out selection))
                     {

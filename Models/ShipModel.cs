@@ -1,8 +1,10 @@
-﻿namespace SpaceGame.Models
+﻿using SpaceGame.BaseClasses;
+
+namespace SpaceGame.Models
 {
     internal class ShipModel
     {
-        public ShipState ShipState { get; set; } = ShipState.Landed;
+        public ShipState ShipState { get; set; } = SpaceGame.Models.ShipState.Landed;
         public double Velocity { get; set; } = 0;       // Current velocity
         public double StartingAltitude { get; set; } = 0; // The altitude at which the lander started its mission
         public double TargetAltitude { get; set; } = 0; // The altitude the lander is trying to reach
@@ -15,5 +17,10 @@
         public double MaxFuelRate { get; set; } = 10;   // Maximum fuel amount
         public double MaxThrust { get; set; } = 5000;   // Maximum thrust level
         public double FreeFallAcceleration { get; set; } = 1.62;    // The affect planet gravity has on velocity
+
+        public ShipModel()
+        {
+            this.ShipState = SpaceGame.Models.ShipState.Landed;
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SpaceGame.BaseClasses;
 using SpaceGame.Interfaces;
-using SpaceGame.Lander;
 using SpaceGame.Models;
 
 namespace SpaceGame.Ship
@@ -83,6 +83,8 @@ namespace SpaceGame.Ship
                     case 2: // User wants to exit the program
                         Console.WriteLine("Exiting lander program.");
                         _domainModel.GameState = GameState.OverPlanet;
+                        _domainModel.SpaceMapModel.SpaceMapState = SpaceMapState.OverPlanet;
+
                         exit = true;
                         break;
 
@@ -176,25 +178,25 @@ namespace SpaceGame.Ship
 
             switch (_shipState)
             {
-                case ShipState.Flying:
+                case ShipState { } state when state == ShipState.Flying:
                     break;
-                case ShipState.Landed:
+                case ShipState { } state when state == ShipState.Landed:
                     Console.WriteLine($"You've landed successfully!");
                     SetDomainModelShipModel();
                     _domainModel.GameState = GameState.OnHomePlanet;
                     exitShipLoop = true;
                     break;
-                case ShipState.OutOfFuel:
+                case ShipState { } state when state == ShipState.OutOfFuel:
                     Console.WriteLine($"You ran out of fuel and will crash into the planet.");
                     _domainModel.GameState = GameState.ShipCrashed;
                     exitShipLoop = true;
                     break;
-                case ShipState.Crashed:
+                case ShipState { } state when state == ShipState.Crashed:
                     Console.WriteLine($"Your ship has smashed into the planet!");
                     _domainModel.GameState = GameState.ShipCrashed;
                     exitShipLoop = true;
                     break;
-                case ShipState.Docked:
+                case ShipState { } state when state == ShipState.Docked:
                     Console.WriteLine($"You've reached orbit successfully!");
                     SetDomainModelShipModel();
                     _domainModel.GameState = GameState.OverHomePlanet;

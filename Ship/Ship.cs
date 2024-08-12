@@ -1,4 +1,5 @@
-﻿using SpaceGame.Models;
+﻿using SpaceGame.BaseClasses;
+using SpaceGame.Models;
 using System.Text.Json;
 
 namespace SpaceGame.Ship
@@ -7,7 +8,7 @@ namespace SpaceGame.Ship
     {
         private const int TIME_MULTIPLIER = 3;   // Small amount of time passing during each cycle
         private const int MAX_COMPLETION_VELOCITY = 2;  // The max velocity acceptable for landing and docking
-        public ShipState ShipState { get; set; } = ShipState.Docked;
+        public ShipState ShipState { get; set; } = ShipState.Landed;
         public double FuelFlowRate { get; private set; } = 0;   // Fuel flow rate as chosen by the pilot
         public double Velocity { get; private set; } = 0;       // Current velocity
         public double Altitude { get; private set; } = 1000;    // Current altitude
