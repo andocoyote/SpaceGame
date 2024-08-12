@@ -74,13 +74,13 @@ namespace SpaceGame.Space
 
             char selection;
 
-            switch (_domainModel.GameState)
+            switch (_domainModel.SpaceMapModel.SpaceMapState)
             {
-                case GameState.EmtpySpace:
+                case SpaceMapState { } state when state == SpaceMapState.EmtpySpace:
                     _navigation.DisplayMap();
                     break;
 
-                case GameState.OverPlanet:
+                case SpaceMapState { } state when state == SpaceMapState.OverPlanet:
                     _navigation.DisplayMap();
                     Console.Write($"You are over {_domainModel?.MapObject?.Label}. Want to descend? (y/n) :");
                     
@@ -93,7 +93,8 @@ namespace SpaceGame.Space
                     {
                         if (_domainModel != null)
                         {
-                            _domainModel.GameState = GameState.InitiatePlanetLanding;
+                            _domainModel.GameState = GameState.LanderScenario;
+                            _domainModel.PlanetMapModel.PlanetMapState = PlanetMapState.InitiatePlanetLanding;
                         }
                         
                         continueScenario = false;
@@ -101,7 +102,7 @@ namespace SpaceGame.Space
                     
                     break;
 
-                case GameState.OverHomePlanet:
+                case SpaceMapState { } state when state == SpaceMapState.OverHomePlanet:
                     _navigation.DisplayMap();
                     MapObject? homePlanet = _domainModel?.SpaceMapModel?.ObjectAtPosition;
 
@@ -117,7 +118,8 @@ namespace SpaceGame.Space
                         Console.WriteLine("Refuel, etc. on home planet.");
                         if (_domainModel != null)
                         {
-                            _domainModel.GameState = GameState.InitiateHomePlanetLanding;
+                            _domainModel.GameState = GameState.ShipScenario;
+                            _domainModel.PlanetMapModel.PlanetMapState = PlanetMapState.InitiateHomePlanetLanding;
                         }
 
                         continueScenario = false;

@@ -68,13 +68,13 @@ namespace SpaceGame.Planet
 
             char selection;
 
-            switch (_domainModel.GameState)
+            switch (_domainModel.PlanetMapModel.PlanetMapState)
             {
-                case GameState.EmtpyLand:
+                case PlanetMapState { } state when state == PlanetMapState.EmtpyLand:
                     _navigation.DisplayMap();
                     break;
 
-                case GameState.OnLandingZone:
+                case PlanetMapState { } state when state == PlanetMapState.OnLandingZone:
                     _navigation.DisplayMap();
                     Console.Write("You are on the landing zone. Want to ascend? (y/n) :");
 
@@ -85,13 +85,14 @@ namespace SpaceGame.Planet
 
                     if (selection == 'y')
                     {
-                        _domainModel.GameState = GameState.InitiateDocking;
+                        _domainModel.GameState = GameState.LanderScenario;
+                        _domainModel.PlanetMapModel.PlanetMapState = PlanetMapState.InitiateDocking;
                         continueScenario = false;
                     }
 
                     break;
 
-                case GameState.OverItem:
+                case PlanetMapState { } state when state == PlanetMapState.OverItem:
                     _navigation.DisplayMap();
                     Console.Write($"You are at {_domainModel?.MapObject?.Label}. Want to investigate? (y/n) :");
 

@@ -4,19 +4,12 @@
     {
         None,
         ExitGame,
-        EmtpySpace,
-        OverHomePlanet,
-        OnHomePlanet,
-        InitiateHomePlanetLanding,
+        HomeScenario,
+        ShipScenario,
+        SpaceScenario,
+        LanderScenario,
+        PlanetScenario,
         ShipCrashed,
-        OverPlanet,
-        InitiatePlanetLanding,
-        OnLandingZone,
-        InitiateDocking,
-        InFight,
-        LanderCrashed,
-        EmtpyLand,
-        OverItem,
-        InspectItem
+        LanderCrashed
     }
 }

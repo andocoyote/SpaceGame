@@ -81,7 +81,7 @@ namespace SpaceGame.Lander
 
                     case 2: // User wants to exit the program
                         Console.WriteLine("Exiting lander program.");
-                        _domainModel.GameState = GameState.OverPlanet;
+                        _domainModel.GameState = GameState.SpaceScenario;
                         _domainModel.SpaceMapModel.SpaceMapState = SpaceMapState.OverPlanet;
 
                         exit = true;
@@ -182,7 +182,8 @@ namespace SpaceGame.Lander
                 case LanderState { } state when state == LanderState.Landed:
                     Console.WriteLine($"You've landed successfully!");
                     SetDomainModelLanderModel();
-                    _domainModel.GameState = GameState.OnLandingZone;
+                    _domainModel.GameState = GameState.PlanetScenario;
+                    _domainModel.PlanetMapModel.PlanetMapState = PlanetMapState.OnLandingZone;
                     exitLanderLoop = true;
                     break;
                 case LanderState { } state when state == LanderState.OutOfFuel:
@@ -198,7 +199,7 @@ namespace SpaceGame.Lander
                 case LanderState { } state when state == LanderState.Docked:
                     Console.WriteLine($"You've docked successfully!");
                     SetDomainModelLanderModel();
-                    _domainModel.GameState = GameState.OverPlanet;
+                    _domainModel.GameState = GameState.SpaceScenario;
                     _domainModel.SpaceMapModel.SpaceMapState = SpaceMapState.OverPlanet;
 
                     exitLanderLoop = true;
@@ -266,7 +267,7 @@ namespace SpaceGame.Lander
 
         private void InstructUser()
         {
-            if (_domainModel.GameState == GameState.InitiatePlanetLanding)
+            if (_domainModel.PlanetMapModel.PlanetMapState == PlanetMapState.InitiatePlanetLanding)
             {
                 Console.WriteLine("You will attempt to land your ship on the planet.");
             }

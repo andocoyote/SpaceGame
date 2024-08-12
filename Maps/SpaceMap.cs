@@ -59,30 +59,29 @@ namespace SpaceGame.Maps
         public override GameState GetState()
         {
             GameState state = GameState.None;
-            SpaceMapState spaceMapState = SpaceMapState.None;
 
             if (ObjectAtPosition == null)
             {
-                state = GameState.EmtpySpace;
-                spaceMapState = SpaceMapState.EmtpySpace;
+                state = GameState.SpaceScenario;
+                _domainModel.SpaceMapModel.SpaceMapState = SpaceMapState.EmtpySpace;
             }
             else
             {
                 switch (ObjectAtPosition.Type)
                 {
                     case MapObjectType.Planet:
-                        state = GameState.OverPlanet;
-                        spaceMapState = SpaceMapState.OverPlanet;
+                        state = GameState.SpaceScenario;
+                        _domainModel.SpaceMapModel.SpaceMapState = SpaceMapState.OverPlanet;
                         break;
 
                     case MapObjectType.HomePlanet:
-                        state = GameState.OverHomePlanet;
-                        spaceMapState = SpaceMapState.OverHomePlanet;
+                        state = GameState.SpaceScenario;
+                        _domainModel.SpaceMapModel.SpaceMapState = SpaceMapState.OverHomePlanet;
                         break;
 
                     default:
                         state = GameState.None;
-                        spaceMapState = SpaceMapState.None;
+                        _domainModel.SpaceMapModel.SpaceMapState = SpaceMapState.None;
                         break;
                 }
             }

@@ -45,7 +45,7 @@ namespace SpaceGame.GameLoop
             }
 
             //_domainModel.GameState = GameState.EmtpySpace;
-            _domainModel.GameState = GameState.OnHomePlanet;
+            _domainModel.GameState = GameState.HomeScenario;
             bool runGameLoop = true;
 
             SplashPage.DisplaySplashPage();
@@ -59,38 +59,26 @@ namespace SpaceGame.GameLoop
 
                 switch (_domainModel.GameState)
                 {
-                    case GameState.OnHomePlanet:
+                    case GameState.HomeScenario:
+                    case GameState.ShipScenario:
                         _domainModel = _shipLoop.Run();
                         break;
+
                     case GameState.None:
-                    case GameState.OverHomePlanet:
-                    case GameState.EmtpySpace:
-                        _domainModel = _spaceLoop.Run();
-                        break;
-                    case GameState.InitiateHomePlanetLanding:
-                        _domainModel = _shipLoop.Run();
-                        break;
-                    case GameState.OverPlanet:
+                    case GameState.SpaceScenario:
                         _domainModel = _spaceLoop.Run();
                         break;
 
-                    case GameState.InitiatePlanetLanding:
+                    case GameState.LanderScenario:
                         _domainModel = _landerLoop.Run();
                         break;
 
-                    case GameState.InitiateDocking:
-                        _domainModel = _landerLoop.Run();
-                        break;
-
-                    case GameState.OnLandingZone:
-                        _domainModel = _planetLoop.Run();
-                        break;
-
-                    case GameState.EmtpyLand:
+                    case GameState.PlanetScenario:
                         _domainModel = _planetLoop.Run();
                         break;
 
                     case GameState.LanderCrashed:
+                    case GameState.ShipCrashed:
                         Console.WriteLine("You've crashed the lander.");
                         runGameLoop = false;
                         break;

@@ -51,7 +51,7 @@ namespace SpaceGame.Ship
                 {
                     case 1: 
                         // If ship is in orbit in space, start with default values
-                        if (_domainModel.ShipModel.ShipState == ShipState.Docked)
+                        if (_domainModel.ShipModel.ShipState == ShipState.InOrbit)
                         {
                             _ship = new Ship();
                             _ship.ShipState = ShipState.Landing;
@@ -82,7 +82,7 @@ namespace SpaceGame.Ship
 
                     case 2: // User wants to exit the program
                         Console.WriteLine("Exiting lander program.");
-                        _domainModel.GameState = GameState.OverPlanet;
+                        _domainModel.GameState = GameState.SpaceScenario;
                         _domainModel.SpaceMapModel.SpaceMapState = SpaceMapState.OverPlanet;
 
                         exit = true;
@@ -183,7 +183,7 @@ namespace SpaceGame.Ship
                 case ShipState { } state when state == ShipState.Landed:
                     Console.WriteLine($"You've landed successfully!");
                     SetDomainModelShipModel();
-                    _domainModel.GameState = GameState.OnHomePlanet;
+                    _domainModel.GameState = GameState.HomeScenario;
                     exitShipLoop = true;
                     break;
                 case ShipState { } state when state == ShipState.OutOfFuel:
@@ -196,10 +196,11 @@ namespace SpaceGame.Ship
                     _domainModel.GameState = GameState.ShipCrashed;
                     exitShipLoop = true;
                     break;
-                case ShipState { } state when state == ShipState.Docked:
+                case ShipState { } state when state == ShipState.InOrbit:
                     Console.WriteLine($"You've reached orbit successfully!");
                     SetDomainModelShipModel();
-                    _domainModel.GameState = GameState.OverHomePlanet;
+                    _domainModel.GameState = GameState.SpaceScenario;
+                    _domainModel.SpaceMapModel.SpaceMapState = SpaceMapState.OverHomePlanet;
                     exitShipLoop = true;
                     break;
                 default:
@@ -259,7 +260,7 @@ namespace SpaceGame.Ship
 
         private void InstructUser()
         {
-            if (_domainModel.GameState == GameState.InitiateHomePlanetLanding)
+            if (_domainModel.PlanetMapModel.PlanetMapState == PlanetMapState.InitiateHomePlanetLanding)
             {
                 Console.WriteLine("You will attempt to land your ship on the planet.");
             }

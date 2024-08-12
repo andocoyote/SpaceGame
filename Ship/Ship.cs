@@ -56,7 +56,7 @@ namespace SpaceGame.Ship
 
             // If the ship is docked, we need to get to the surface of the planet (altitude == 0)
             // Else, we need to get back to the ship (altitude == 1000)
-            TargetAltitude = shipState == ShipState.Docked ? 0 : 1000;
+            TargetAltitude = shipState == ShipState.InOrbit ? 0 : 1000;
             DistanceFromTarget = Math.Abs(TargetAltitude - StartingAltitude);
         }
 
@@ -208,7 +208,7 @@ namespace SpaceGame.Ship
                 DistanceFromTarget = 0;
                 FuelFlowRate = 0;
                 _altimeterIsSet = false;
-                this.ShipState = ShipState.Docked;
+                this.ShipState = ShipState.InOrbit;
             }
             // Still flying- haven't landed, docked, or crashed
             else

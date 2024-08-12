@@ -83,7 +83,7 @@ namespace SpaceGame.Ship
             }
 
             // Place the ship in the animation at the initial location (top or bottom)
-            if (_domainModel.ShipModel.ShipState == SpaceGame.Models.ShipState.Docked)
+            if (_domainModel.ShipModel.ShipState == SpaceGame.Models.ShipState.InOrbit)
             {
                 row = 0;
             }

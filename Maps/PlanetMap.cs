@@ -62,22 +62,26 @@ namespace SpaceGame.Maps
 
             if (ObjectAtPosition == null)
             {
-                state = GameState.EmtpyLand;
+                state = GameState.PlanetScenario;
+                _domainModel.PlanetMapModel.PlanetMapState = PlanetMapState.EmtpyLand;
             }
             else
             {
                 switch (ObjectAtPosition.Type)
                 {
                     case MapObjectType.Mountain:
-                        state = GameState.OverItem;
+                        state = GameState.PlanetScenario;
+                        _domainModel.PlanetMapModel.PlanetMapState = PlanetMapState.OverItem;
                         break;
 
                     case MapObjectType.LandingZone:
-                        state = GameState.OnLandingZone;
+                        state = GameState.PlanetScenario;
+                        _domainModel.PlanetMapModel.PlanetMapState = PlanetMapState.OnLandingZone;
                         break;
 
                     default:
                         state = GameState.None;
+                        _domainModel.PlanetMapModel.PlanetMapState = PlanetMapState.None;
                         break;
                 }
             }
