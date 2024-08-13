@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SpaceGame.Home;
 using SpaceGame.Interfaces;
 using SpaceGame.Lander;
 using SpaceGame.Loggers;
@@ -37,9 +38,10 @@ namespace SpaceGame
 
             // Navigation
             builder.Services.AddTransient<NavigationFactory>();
-            builder.Services.AddSingleton<INavigation, Navigation.Navigation>();;
+            builder.Services.AddSingleton<INavigation, Navigation.Navigation>();
 
             // Scenarios
+            builder.Services.AddKeyedSingleton<IScenario, HomeLoop>("Home");
             builder.Services.AddKeyedSingleton<IScenario, ShipLoop>("Ship");
             builder.Services.AddKeyedSingleton<IScenario, LanderLoop>("Lander");
 
@@ -77,6 +79,7 @@ namespace SpaceGame
             // Have to request SpaceLoop and PlanetLoop since the both implement IScenario
             builder.Services.AddSingleton<GameLoop.GameLoop>(sp =>
             {
+                var homeLoop = sp.GetKeyedService<IScenario>("Home");
                 var shipLoop = sp.GetKeyedService<IScenario>("Ship");
                 var spaceLoop = sp.GetServices<IScenario>().OfType<SpaceLoop>().FirstOrDefault();
                 var landerLoop = sp.GetKeyedService<IScenario>("Lander");
@@ -84,7 +87,14 @@ namespace SpaceGame
                 var domainModel = sp.GetRequiredService<DomainModel>();
                 var logger = sp.GetRequiredService<ILogger>();
 
-                return new GameLoop.GameLoop(shipLoop, spaceLoop, landerLoop, planetLoop, domainModel, logger);
+                return new GameLoop.GameLoop(
+                    homeLoop,
+                    shipLoop,
+                    spaceLoop,
+                    landerLoop,
+                    planetLoop,
+                    domainModel,
+                    logger);
             });
 
             using IHost host = builder.Build();

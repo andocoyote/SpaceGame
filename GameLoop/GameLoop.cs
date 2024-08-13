@@ -9,6 +9,7 @@ namespace SpaceGame.GameLoop
     // Main Game Loop object
     internal class GameLoop
     {
+        private IScenario? _homeLoop;
         private IScenario? _shipLoop;
         private IScenario? _spaceLoop;
         private IScenario? _landerLoop;
@@ -18,6 +19,7 @@ namespace SpaceGame.GameLoop
 
         // GameLoop will run scenarios based on properties stored in the DomainModel
         public GameLoop(
+            [FromKeyedServices("Home")] IScenario? homeLoop,
             [FromKeyedServices("Ship")] IScenario? shipLoop,
             IScenario? spaceLoop,
             [FromKeyedServices("Lander")] IScenario? landerLoop,
@@ -25,6 +27,7 @@ namespace SpaceGame.GameLoop
             DomainModel domainModel,
             ILogger logger)
         {
+            _homeLoop = homeLoop;
             _shipLoop = shipLoop;
             _spaceLoop = spaceLoop;
             _landerLoop = landerLoop;
@@ -36,7 +39,8 @@ namespace SpaceGame.GameLoop
         // Run a scenario for the Domain Model State property
         public void Run()
         {
-            if (_shipLoop == null ||
+            if (_homeLoop == null ||
+                _shipLoop == null ||
                 _spaceLoop == null ||
                 _landerLoop == null ||
                 _planetLoop == null)
@@ -44,7 +48,6 @@ namespace SpaceGame.GameLoop
                 return;
             }
 
-            //_domainModel.GameState = GameState.EmtpySpace;
             _domainModel.GameState = GameState.HomeScenario;
             bool runGameLoop = true;
 
@@ -59,12 +62,15 @@ namespace SpaceGame.GameLoop
 
                 switch (_domainModel.GameState)
                 {
+                    case GameState.None:
                     case GameState.HomeScenario:
+                        _domainModel = _homeLoop.Run();
+                        break;
+
                     case GameState.ShipScenario:
                         _domainModel = _shipLoop.Run();
                         break;
 
-                    case GameState.None:
                     case GameState.SpaceScenario:
                         _domainModel = _spaceLoop.Run();
                         break;
@@ -84,6 +90,7 @@ namespace SpaceGame.GameLoop
                         break;
 
                     case GameState.ExitGame:
+                        Console.WriteLine("See you at the next mission.");
                         runGameLoop = false;
                         break;
 
