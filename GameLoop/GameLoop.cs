@@ -9,6 +9,7 @@ namespace SpaceGame.GameLoop
     // Main Game Loop object
     internal class GameLoop
     {
+        private IScenario? _startLoop;
         private IScenario? _homeLoop;
         private IScenario? _shipLoop;
         private IScenario? _spaceLoop;
@@ -19,6 +20,7 @@ namespace SpaceGame.GameLoop
 
         // GameLoop will run scenarios based on properties stored in the DomainModel
         public GameLoop(
+            [FromKeyedServices("Start")] IScenario? startLoop,
             [FromKeyedServices("Home")] IScenario? homeLoop,
             [FromKeyedServices("Ship")] IScenario? shipLoop,
             IScenario? spaceLoop,
@@ -27,6 +29,7 @@ namespace SpaceGame.GameLoop
             DomainModel domainModel,
             ILogger logger)
         {
+            _startLoop = startLoop;
             _homeLoop = homeLoop;
             _shipLoop = shipLoop;
             _spaceLoop = spaceLoop;
@@ -39,7 +42,8 @@ namespace SpaceGame.GameLoop
         // Run a scenario for the Domain Model State property
         public void Run()
         {
-            if (_homeLoop == null ||
+            if (_startLoop == null ||
+                _homeLoop == null ||
                 _shipLoop == null ||
                 _spaceLoop == null ||
                 _landerLoop == null ||
@@ -48,7 +52,7 @@ namespace SpaceGame.GameLoop
                 return;
             }
 
-            _domainModel.GameState = GameState.HomeScenario;
+            _domainModel.GameState = GameState.StartGame;
             bool runGameLoop = true;
 
             SplashPage.DisplaySplashPage();
@@ -63,6 +67,10 @@ namespace SpaceGame.GameLoop
                 switch (_domainModel.GameState)
                 {
                     case GameState.None:
+                    case GameState.StartGame:
+                        _domainModel = _startLoop.Run();
+                        break;
+
                     case GameState.HomeScenario:
                         _domainModel = _homeLoop.Run();
                         break;

@@ -3,6 +3,7 @@
     public enum GameState
     {
         None,
+        StartGame,
         ExitGame,
         HomeScenario,
         ShipScenario,

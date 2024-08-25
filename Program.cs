@@ -12,6 +12,7 @@ using SpaceGame.Planet;
 using SpaceGame.Screen;
 using SpaceGame.Ship;
 using SpaceGame.Space;
+using SpaceGame.Start;
 
 namespace SpaceGame
 {
@@ -41,6 +42,7 @@ namespace SpaceGame
             builder.Services.AddSingleton<INavigation, Navigation.Navigation>();
 
             // Scenarios
+            builder.Services.AddKeyedSingleton<IScenario, StartLoop>("Start");
             builder.Services.AddKeyedSingleton<IScenario, HomeLoop>("Home");
             builder.Services.AddKeyedSingleton<IScenario, ShipLoop>("Ship");
             builder.Services.AddKeyedSingleton<IScenario, LanderLoop>("Lander");
@@ -75,10 +77,14 @@ namespace SpaceGame
             // Loggers
             builder.Services.AddSingleton<ILogger, ConsoleLogger>();
 
+            // Other services
+            builder.Services.AddSingleton<DomainModelService.DomainModelService>();
+
             // Game Loop
             // Have to request SpaceLoop and PlanetLoop since the both implement IScenario
             builder.Services.AddSingleton<GameLoop.GameLoop>(sp =>
             {
+                var startLoop = sp.GetKeyedService<IScenario>("Start");
                 var homeLoop = sp.GetKeyedService<IScenario>("Home");
                 var shipLoop = sp.GetKeyedService<IScenario>("Ship");
                 var spaceLoop = sp.GetServices<IScenario>().OfType<SpaceLoop>().FirstOrDefault();
@@ -88,6 +94,7 @@ namespace SpaceGame
                 var logger = sp.GetRequiredService<ILogger>();
 
                 return new GameLoop.GameLoop(
+                    startLoop,
                     homeLoop,
                     shipLoop,
                     spaceLoop,
