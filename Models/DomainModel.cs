@@ -12,5 +12,6 @@ namespace SpaceGame.Models
         public PlanetMapModel PlanetMapModel { get; set; } = new PlanetMapModel();
         public ShipModel ShipModel { get; set; } = new ShipModel();
         public LanderModel LanderModel { get; set; } = new LanderModel();
+        public InventoryModel InventoryModel { get; set; } = new InventoryModel();
     }
 }

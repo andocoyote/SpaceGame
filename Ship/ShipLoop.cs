@@ -252,7 +252,7 @@ namespace SpaceGame.Ship
 
             while (!int.TryParse(Console.ReadLine(), out choice))
             {
-                Console.WriteLine($"Invalid selction. Please try again :");
+                Console.Write($"Invalid selction. Please try again: ");
             }
 
             return choice;

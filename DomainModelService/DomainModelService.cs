@@ -1,4 +1,5 @@
-﻿using SpaceGame.Loggers;
+﻿using SpaceGame.BaseClasses;
+using SpaceGame.Loggers;
 using SpaceGame.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -14,7 +15,8 @@ namespace SpaceGame.DomainModelService
                 new ShipStateConverter(),
                 new LanderStateConverter(),
                 new SpaceMapStateConverter(),
-                new PlaneMapStateConverter()
+                new PlaneMapStateConverter(),
+                new ItemCategoryConverter()
             }
         };
 
@@ -24,7 +26,7 @@ namespace SpaceGame.DomainModelService
 
         private string _playerName = string.Empty;
 
-        // Something like: C:\Users\{UserName}\AppData\Local\SpaceGame\{PlayerName}\space_game_model.json
+        // Something like: C:\Users\{UserName}\AppData\Local\SpaceGame\Games\{PlayerName}\space_game_model.json
         string _domainModelFileDirectoy = string.Empty;
         string _domainModelFilePath = string.Empty;
         string _gamesDirectory = string.Empty;
@@ -230,7 +232,7 @@ namespace SpaceGame.DomainModelService
                     {
                         string propertyValue = reader.GetString() ?? string.Empty;
 
-                        switch (propertyName)
+                        switch (propertyValue)
                         {
                             case nameof(ShipState.None):
                                 stateName = ShipState.None;
@@ -311,7 +313,7 @@ namespace SpaceGame.DomainModelService
                     {
                         string propertyValue = reader.GetString() ?? string.Empty;
 
-                        switch (propertyName)
+                        switch (propertyValue)
                         {
                             case nameof(LanderState.None):
                                 stateName = LanderState.None;
@@ -475,7 +477,7 @@ namespace SpaceGame.DomainModelService
                     {
                         string propertyValue = reader.GetString() ?? string.Empty;
 
-                        switch (propertyName)
+                        switch (propertyValue)
                         {
                             case nameof(PlanetMapState.None):
                                 stateName = PlanetMapState.None;
@@ -518,6 +520,84 @@ namespace SpaceGame.DomainModelService
                                 break;
                             default:
                                 stateName = PlanetMapState.None;
+                                break;
+                        }
+                    }
+                }
+            }
+
+            return stateName;
+        }
+    }
+
+    public class ItemCategoryConverter : JsonConverter<ItemCategory>
+    {
+        // Serialize the static fields manually
+        public override void Write(Utf8JsonWriter writer, ItemCategory value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+            writer.WriteString("State", value.ToString());
+            writer.WriteEndObject();
+        }
+
+        // Deserialize static fields (re-initialize them if necessary)
+        public override ItemCategory? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            // Ensure we are at the start of the "PlanetMapState" object in the JSON
+            if (reader.TokenType != JsonTokenType.StartObject)
+            {
+                throw new JsonException();
+            }
+
+            // Local variables to hold the deserialized values
+            ItemCategory stateName = ItemCategory.None;
+
+            // Read through the JSON object
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonTokenType.EndObject)
+                {
+                    // End of the object
+                    break;
+                }
+
+                // Get the property name
+                if (reader.TokenType == JsonTokenType.PropertyName)
+                {
+                    string propertyName = reader.GetString() ?? string.Empty;
+
+                    // Move to the property value
+                    reader.Read();
+
+                    if (propertyName == "State")
+                    {
+                        string propertyValue = reader.GetString() ?? string.Empty;
+
+                        switch (propertyValue)
+                        {
+                            case nameof(ItemCategory.None):
+                                stateName = ItemCategory.None;
+                                break;
+                            case nameof(ItemCategory.PlayerWeapon):
+                                stateName = ItemCategory.PlayerWeapon;
+                                break;
+                            case nameof(ItemCategory.PlayerArmor):
+                                stateName = ItemCategory.PlayerArmor;
+                                break;
+                            case nameof(ItemCategory.ShipWeapon):
+                                stateName = ItemCategory.ShipWeapon;
+                                break;
+                            case nameof(ItemCategory.ShipArmor):
+                                stateName = ItemCategory.ShipArmor;
+                                break;
+                            case nameof(ItemCategory.LanderWeapon):
+                                stateName = ItemCategory.LanderWeapon;
+                                break;
+                            case nameof(ItemCategory.LanderArmor):
+                                stateName = ItemCategory.LanderArmor;
+                                break;
+                            default:
+                                stateName = ItemCategory.None;
                                 break;
                         }
                     }

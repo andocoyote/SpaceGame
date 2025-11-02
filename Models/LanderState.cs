@@ -27,4 +27,4 @@ namespace SpaceGame.Models
         public static readonly LanderState Landing = new LanderState(LanderStateEnum.Landing);
         public static readonly LanderState Docking = new LanderState(LanderStateEnum.Docked);
     }
-    }
+}

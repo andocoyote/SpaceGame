@@ -1,4 +1,5 @@
-﻿using SpaceGame.Interfaces;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SpaceGame.Interfaces;
 using SpaceGame.Loggers;
 using SpaceGame.Models;
 
@@ -6,15 +7,18 @@ namespace SpaceGame.Home
 {
     internal class HomeLoop : IScenario
     {
+        private IScenario? _inventoryLoop;
         private DomainModelService.DomainModelService _domainModelService;
         private ILogger _logger;
         private DomainModel _domainModel;
 
         public HomeLoop(
+            [FromKeyedServices("Inventory")] IScenario? inventoryLoop,
             DomainModelService.DomainModelService domainModelService,
             DomainModel domainModel,
             ILogger logger)
         {
+            _inventoryLoop = inventoryLoop;
             _domainModelService = domainModelService;
             _domainModel = domainModel;
             _logger = logger;
@@ -22,6 +26,8 @@ namespace SpaceGame.Home
 
         public DomainModel Run()
         {
+            if (_inventoryLoop == null) return _domainModel;
+
             int selection;
             bool exit = false;
 
@@ -44,9 +50,7 @@ namespace SpaceGame.Home
                         break;
 
                     case 2:
-                        Inventory.Inventory inventory = new Inventory.Inventory();
-                        inventory.DisplayInventory();
-                        inventory.SaveInventory();
+                        _inventoryLoop.Run();
                         break;
 
                     case 3:
@@ -85,14 +89,14 @@ namespace SpaceGame.Home
 
             Console.WriteLine("Please choose from the following options:");
             Console.WriteLine("1. Fire-up the ship and launch to orbit");
-            Console.WriteLine("2. View inventory");
+            Console.WriteLine("2. Access inventory");
             Console.WriteLine("3. Save the game");
             Console.WriteLine("0. Exit the game");
             Console.WriteLine("Enter your choice: ");
 
             while (!int.TryParse(Console.ReadLine(), out choice))
             {
-                Console.WriteLine($"Invalid selction. Please try again :");
+                Console.Write($"Invalid selction. Please try again: ");
             }
 
             return choice;

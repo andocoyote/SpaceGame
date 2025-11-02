@@ -1,0 +1,62 @@
+[
+  {
+    "Name": "Lazer Rifle 1.0",
+    "Description": "An improved lazer rifle",
+    "Damage": 1,
+    "Protection": 0,
+    "Value": 1000,
+    "ItemCategory": {
+      "State": "PlayerWeapon"
+    }
+  },
+  {
+    "Name": "Lazer Rifle 2.0",
+    "Description": "An improved lazer rifle",
+    "Damage": 3,
+    "Protection": 0,
+    "Value": 3000,
+    "ItemCategory": {
+      "State": "PlayerWeapon"
+    }
+  },
+  {
+    "Name": "Lazer Rifle 3.0",
+    "Description": "An improved lazer rifle",
+    "Damage": 5,
+    "Protection": 0,
+    "Value": 5000,
+    "ItemCategory": {
+      "State": "PlayerWeapon"
+    }
+  },
+  {
+    "Name": "Ship Cannon 1.0",
+    "Description": "An improved ship cannon",
+    "Damage": 1,
+    "Protection": 0,
+    "Value": 1000,
+    "ItemCategory": {
+      "State": "ShipWeapon"
+    }
+  },
+  {
+    "Name": "Ship Cannon 2.0",
+    "Description": "An improved ship cannon",
+    "Damage": 3,
+    "Protection": 0,
+    "Value": 3000,
+    "ItemCategory": {
+      "State": "ShipWeapon"
+    }
+  },
+  {
+    "Name": "Ship Cannon 3.0",
+    "Description": "An improved ship cannon",
+    "Damage": 5,
+    "Protection": 0,
+    "Value": 5000,
+    "ItemCategory": {
+      "State": "ShipWeapon"
+    }
+  }
+]

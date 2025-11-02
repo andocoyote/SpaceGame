@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SpaceGame.Home;
 using SpaceGame.Interfaces;
+using SpaceGame.Inventory;
 using SpaceGame.Lander;
 using SpaceGame.Loggers;
 using SpaceGame.Maps;
@@ -46,6 +47,7 @@ namespace SpaceGame
             builder.Services.AddKeyedSingleton<IScenario, HomeLoop>("Home");
             builder.Services.AddKeyedSingleton<IScenario, ShipLoop>("Ship");
             builder.Services.AddKeyedSingleton<IScenario, LanderLoop>("Lander");
+            builder.Services.AddKeyedSingleton<IScenario, InventoryLoop>("Inventory");
 
             // Since SpaceMap implements IMap, have to create the Navigation
             // instance with SpaceMap explicitly passed to the constructor
@@ -79,6 +81,7 @@ namespace SpaceGame
 
             // Other services
             builder.Services.AddSingleton<DomainModelService.DomainModelService>();
+            builder.Services.AddSingleton<Store>();
 
             // Game Loop
             // Have to request SpaceLoop and PlanetLoop since the both implement IScenario
